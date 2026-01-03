@@ -1,5 +1,6 @@
 # Ignore build artifacts
 avata-go-*
+avata-go
 *.exe
 *.tar.gz
 *.zip
