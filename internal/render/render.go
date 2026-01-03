@@ -4,10 +4,15 @@ import (
 	"bytes"
 	"crypto/md5"
 	"fmt"
+	"image"
 	"image/color"
+	"image/gif"
+	"image/jpeg"
+	"image/png"
 	"strconv"
 	"strings"
 
+	"github.com/chai2010/webp"
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font/gofont/gobold"
@@ -33,8 +38,24 @@ func New() (*Renderer, error) {
 	return &Renderer{regular: regular, bold: bold}, nil
 }
 
-// DrawImage renders a PNG with provided options.
+// ImageFormat represents the output image format
+type ImageFormat string
+
+const (
+	FormatPNG  ImageFormat = "png"
+	FormatJPG  ImageFormat = "jpg"
+	FormatJPEG ImageFormat = "jpeg"
+	FormatGIF  ImageFormat = "gif"
+	FormatWebP ImageFormat = "webp"
+)
+
+// DrawImage renders an image with provided options.
 func (r *Renderer) DrawImage(w, h int, bgHex, fgHex, text string, rounded, bold bool) ([]byte, error) {
+	return r.DrawImageWithFormat(w, h, bgHex, fgHex, text, rounded, bold, FormatWebP)
+}
+
+// DrawImageWithFormat renders an image in the specified format with provided options.
+func (r *Renderer) DrawImageWithFormat(w, h int, bgHex, fgHex, text string, rounded, bold bool, format ImageFormat) ([]byte, error) {
 	dc := gg.NewContext(w, h)
 
 	bg := ParseHexColor(bgHex)
@@ -69,11 +90,37 @@ func (r *Renderer) DrawImage(w, h int, bgHex, fgHex, text string, rounded, bold 
 	dc.SetColor(fg)
 	dc.DrawStringAnchored(text, float64(w)/2, float64(h)/2, 0.5, 0.5)
 
-	var buf bytes.Buffer
-	if err := dc.EncodePNG(&buf); err != nil {
-		return nil, fmt.Errorf("encode png: %w", err)
-	}
+	return encodeImage(dc.Image(), format)
+}
 
+// encodeImage encodes the image in the specified format
+func encodeImage(img image.Image, format ImageFormat) ([]byte, error) {
+	var buf bytes.Buffer
+	
+	switch format {
+	case FormatPNG:
+		if err := png.Encode(&buf, img); err != nil {
+			return nil, fmt.Errorf("encode png: %w", err)
+		}
+	case FormatJPG, FormatJPEG:
+		if err := jpeg.Encode(&buf, img, &jpeg.Options{Quality: 90}); err != nil {
+			return nil, fmt.Errorf("encode jpeg: %w", err)
+		}
+	case FormatGIF:
+		if err := gif.Encode(&buf, img, nil); err != nil {
+			return nil, fmt.Errorf("encode gif: %w", err)
+		}
+	case FormatWebP:
+		if err := webp.Encode(&buf, img, &webp.Options{Lossless: false, Quality: 90}); err != nil {
+			return nil, fmt.Errorf("encode webp: %w", err)
+		}
+	default:
+		// Default to WebP
+		if err := webp.Encode(&buf, img, &webp.Options{Lossless: false, Quality: 90}); err != nil {
+			return nil, fmt.Errorf("encode default format (webp): %w", err)
+		}
+	}
+	
 	return buf.Bytes(), nil
 }
 

@@ -34,12 +34,57 @@ func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 
 var placeholderRegex = regexp.MustCompile(`^(\d+)x(\d+)$`)
 
+// extractFormat extracts the image format from a filename, returning the format and the name without extension
+func extractFormat(filename string) (render.ImageFormat, string) {
+	// Default to WebP
+	format := render.FormatWebP
+	name := filename
+	
+	// Check for common extensions
+	if strings.HasSuffix(filename, ".png") {
+		format = render.FormatPNG
+		name = strings.TrimSuffix(filename, ".png")
+	} else if strings.HasSuffix(filename, ".jpg") {
+		format = render.FormatJPG
+		name = strings.TrimSuffix(filename, ".jpg")
+	} else if strings.HasSuffix(filename, ".jpeg") {
+		format = render.FormatJPEG
+		name = strings.TrimSuffix(filename, ".jpeg")
+	} else if strings.HasSuffix(filename, ".gif") {
+		format = render.FormatGIF
+		name = strings.TrimSuffix(filename, ".gif")
+	} else if strings.HasSuffix(filename, ".webp") {
+		format = render.FormatWebP
+		name = strings.TrimSuffix(filename, ".webp")
+	}
+	
+	return format, name
+}
+
+// getContentType returns the MIME type for the given format
+func getContentType(format render.ImageFormat) string {
+	switch format {
+	case render.FormatPNG:
+		return "image/png"
+	case render.FormatJPG, render.FormatJPEG:
+		return "image/jpeg"
+	case render.FormatGIF:
+		return "image/gif"
+	case render.FormatWebP:
+		return "image/webp"
+	default:
+		return "image/webp"
+	}
+}
+
 func (s *Service) handleAvatar(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
+	format := render.FormatWebP // Default to WebP
+	
 	if strings.HasPrefix(r.URL.Path, "/avatar/") {
 		parts := strings.Split(r.URL.Path, "/")
 		if len(parts) > 2 && parts[2] != "" {
-			name = strings.TrimSuffix(parts[2], ".png")
+			format, name = extractFormat(parts[2])
 		}
 	}
 	if name == "" {
@@ -63,16 +108,18 @@ func (s *Service) handleAvatar(w http.ResponseWriter, r *http.Request) {
 		fgHex = render.GetContrastColor(bgHex)
 	}
 
-	key := fmt.Sprintf("Avatar:%s:%d:%t:%t:%s:%s", name, size, rounded, bold, bgHex, fgHex)
-	s.serveImage(w, r, key, func() ([]byte, error) {
-		return s.renderer.DrawImage(size, size, bgHex, fgHex, render.GetInitials(name), rounded, bold)
+	key := fmt.Sprintf("Avatar:%s:%d:%t:%t:%s:%s:%s", name, size, rounded, bold, bgHex, fgHex, format)
+	s.serveImage(w, r, key, format, func() ([]byte, error) {
+		return s.renderer.DrawImageWithFormat(size, size, bgHex, fgHex, render.GetInitials(name), rounded, bold, format)
 	})
 }
 
 func (s *Service) handlePlaceholder(w http.ResponseWriter, r *http.Request) {
 	width, height := config.DefaultSize, config.DefaultSize
 	pathMetric := strings.TrimPrefix(r.URL.Path, "/placeholder/")
-	pathMetric = strings.TrimSuffix(pathMetric, ".png")
+	
+	// Extract format from path
+	format, pathMetric := extractFormat(pathMetric)
 
 	if matches := placeholderRegex.FindStringSubmatch(pathMetric); len(matches) == 3 {
 		width = utils.ParseIntOrDefault(matches[1], config.DefaultSize)
@@ -96,16 +143,16 @@ func (s *Service) handlePlaceholder(w http.ResponseWriter, r *http.Request) {
 		fgHex = render.GetContrastColor(bgHex)
 	}
 
-	key := fmt.Sprintf("PH:%d:%d:%s:%s:%s", width, height, bgHex, fgHex, text)
-	s.serveImage(w, r, key, func() ([]byte, error) {
-		return s.renderer.DrawImage(width, height, bgHex, fgHex, text, false, true)
+	key := fmt.Sprintf("PH:%d:%d:%s:%s:%s:%s", width, height, bgHex, fgHex, text, format)
+	s.serveImage(w, r, key, format, func() ([]byte, error) {
+		return s.renderer.DrawImageWithFormat(width, height, bgHex, fgHex, text, false, true, format)
 	})
 }
 
-func (s *Service) serveImage(w http.ResponseWriter, r *http.Request, cacheKey string, generator func() ([]byte, error)) {
+func (s *Service) serveImage(w http.ResponseWriter, r *http.Request, cacheKey string, format render.ImageFormat, generator func() ([]byte, error)) {
 	etag := fmt.Sprintf("\"%x\"", md5.Sum([]byte(cacheKey)))
 
-	w.Header().Set("Content-Type", "image/png")
+	w.Header().Set("Content-Type", getContentType(format))
 	w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
 	w.Header().Set("ETag", etag)
 

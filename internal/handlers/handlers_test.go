@@ -29,10 +29,96 @@ func TestAvatarHandlerDefaults(t *testing.T) {
 	if rec.Code != http.StatusOK {
 		t.Fatalf("expected 200 got %d", rec.Code)
 	}
-	if ct := rec.Header().Get("Content-Type"); ct != "image/png" {
-		t.Fatalf("expected content-type image/png got %s", ct)
+	// Default format is now WebP
+	if ct := rec.Header().Get("Content-Type"); ct != "image/webp" {
+		t.Fatalf("expected content-type image/webp got %s", ct)
 	}
 	if rec.Body.Len() == 0 {
-		t.Fatal("expected body to contain png data")
+		t.Fatal("expected body to contain image data")
+	}
+}
+
+func TestAvatarHandlerFormats(t *testing.T) {
+	renderer, err := render.New()
+	if err != nil {
+		t.Fatalf("renderer init: %v", err)
+	}
+	cache, _ := lru.New[string, []byte](1)
+	svc := NewService(renderer, cache, config.DefaultServerConfig())
+	mux := http.NewServeMux()
+	svc.RegisterRoutes(mux)
+
+	tests := []struct {
+		name        string
+		path        string
+		contentType string
+	}{
+		{"PNG format", "/avatar/JohnDoe.png", "image/png"},
+		{"JPG format", "/avatar/JohnDoe.jpg", "image/jpeg"},
+		{"JPEG format", "/avatar/JohnDoe.jpeg", "image/jpeg"},
+		{"GIF format", "/avatar/JohnDoe.gif", "image/gif"},
+		{"WebP format", "/avatar/JohnDoe.webp", "image/webp"},
+		{"No extension defaults to WebP", "/avatar/JohnDoe", "image/webp"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, tt.path, nil)
+			rec := httptest.NewRecorder()
+
+			mux.ServeHTTP(rec, req)
+
+			if rec.Code != http.StatusOK {
+				t.Fatalf("expected 200 got %d", rec.Code)
+			}
+			if ct := rec.Header().Get("Content-Type"); ct != tt.contentType {
+				t.Fatalf("expected content-type %s got %s", tt.contentType, ct)
+			}
+			if rec.Body.Len() == 0 {
+				t.Fatal("expected body to contain image data")
+			}
+		})
+	}
+}
+
+func TestPlaceholderHandlerFormats(t *testing.T) {
+	renderer, err := render.New()
+	if err != nil {
+		t.Fatalf("renderer init: %v", err)
+	}
+	cache, _ := lru.New[string, []byte](1)
+	svc := NewService(renderer, cache, config.DefaultServerConfig())
+	mux := http.NewServeMux()
+	svc.RegisterRoutes(mux)
+
+	tests := []struct {
+		name        string
+		path        string
+		contentType string
+	}{
+		{"PNG format", "/placeholder/200x100.png", "image/png"},
+		{"JPG format", "/placeholder/200x100.jpg", "image/jpeg"},
+		{"GIF format", "/placeholder/200x100.gif", "image/gif"},
+		{"WebP format", "/placeholder/200x100.webp", "image/webp"},
+		{"No extension defaults to WebP", "/placeholder/200x100", "image/webp"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, tt.path, nil)
+			rec := httptest.NewRecorder()
+
+			mux.ServeHTTP(rec, req)
+
+			if rec.Code != http.StatusOK {
+				t.Fatalf("expected 200 got %d", rec.Code)
+			}
+			if ct := rec.Header().Get("Content-Type"); ct != tt.contentType {
+				t.Fatalf("expected content-type %s got %s", tt.contentType, ct)
+			}
+			if rec.Body.Len() == 0 {
+				t.Fatal("expected body to contain image data")
+			}
+		})
 	}
 }
