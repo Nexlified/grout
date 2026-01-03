@@ -34,38 +34,61 @@ The server listens on `:8080` by default and exposes the routes below.
 
 Generates a square avatar that displays the initials derived from the provided name.
 
-- **Path**: `/avatar/{name}.png` (URL-encoded; optional) or use the `name` query parameter.
+- **Path**: `/avatar/{name}[.ext]` where `ext` can be `png`, `jpg`, `jpeg`, `gif`, or `webp`. You can also use the `name` query parameter.
+- **Format**: Images are served as WebP by default when no extension is specified. Use `.png`, `.jpg`, `.jpeg`, `.gif`, or `.webp` extension to request a specific format.
 - **Size**: `size` query parameter (default `128`), applied to both width and height.
 - **Background Color**: `background` query parameter accepts hex (`f0e9e9`) or the literal `random` to derive a deterministic color per name.
 - **Text Color**: `color` query parameter (hex, default auto-contrasted).
 - **Rounded**: `rounded=true` draws a circle instead of a square.
 - **Bold**: `bold=true` switches to the embedded Go Bold font.
 
-Example:
+Examples:
 
 ```bash
+# Default WebP format
+curl "http://localhost:8080/avatar/Jane+Doe?size=256&rounded=true&bold=true&background=random"
+
+# PNG format
 curl "http://localhost:8080/avatar/Jane+Doe.png?size=256&rounded=true&bold=true&background=random"
+
+# JPG format
+curl "http://localhost:8080/avatar/Jane+Doe.jpg?size=256"
+
+# WebP format (explicit)
+curl "http://localhost:8080/avatar/Jane+Doe.webp?size=256"
 ```
 
 ## `/placeholder/` Endpoint
 
 Creates a rectangular placeholder image with custom dimensions and optional overlay text.
 
-- **Path Form**: `/placeholder/{width}x{height}.png`. If omitted, fall back to query parameters `w` and `h` (default `128`).
+- **Path Form**: `/placeholder/{width}x{height}[.ext]` where `ext` can be `png`, `jpg`, `jpeg`, `gif`, or `webp`. If extension is omitted, images are served as WebP by default.
+- **Format**: Images are served as WebP by default when no extension is specified. Use `.png`, `.jpg`, `.jpeg`, `.gif`, or `.webp` extension to request a specific format.
+- **Dimensions**: Can also use query parameters `w` and `h` (default `128`).
 - **Text**: `text` query parameter (defaults to "{width} x {height}").
 - **Background Color**: `bg` query parameter (hex, default `cccccc`).
 - **Text Color**: `color` query parameter (hex, default auto-contrasted).
 
-Example:
+Examples:
 
 ```bash
+# Default WebP format
+curl "http://localhost:8080/placeholder/800x400?text=Hero+Image&bg=222222&color=f5f5f5"
+
+# PNG format
 curl "http://localhost:8080/placeholder/800x400.png?text=Hero+Image&bg=222222&color=f5f5f5"
+
+# JPG format
+curl "http://localhost:8080/placeholder/1200x600.jpg?text=Banner"
+
+# GIF format
+curl "http://localhost:8080/placeholder/400x400.gif"
 ```
 
 ## Response Characteristics
 
-- All responses are PNG images with `Content-Type: image/png`.
-- Successful responses include `Cache-Control: public, max-age=31536000, immutable` and an `ETag` keyed by the query parameters.
+- Images are served as WebP by default (when no extension is specified). The `Content-Type` header is set based on the requested format: `image/webp`, `image/png`, `image/jpeg`, or `image/gif`.
+- Successful responses include `Cache-Control: public, max-age=31536000, immutable` and an `ETag` keyed by the query parameters and format.
 - Cached entries are stored in an in-memory LRU (`CacheSize = 2000`) to reduce rendering overhead. Cache hits expose the header `X-Cache: HIT`.
 
 ## Error Handling
