@@ -63,7 +63,7 @@ go-avatars/
 
 ### Image Rendering
 - Default size: 128px
-- Support hex colors (6-digit, no `#` prefix) or 3-digit shorthand
+- Support hex colors (6-digit or 3-digit shorthand, both without `#` prefix)
 - Auto-contrast: Use `GetContrastColor` to determine readable text color
 - Font sizing: 50% of min dimension for 1-2 chars, 15% for longer text (min 12px)
 - Embed fonts (no external dependencies)
