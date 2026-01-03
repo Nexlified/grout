@@ -34,31 +34,26 @@ func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 
 var placeholderRegex = regexp.MustCompile(`^(\d+)x(\d+)$`)
 
+// formatExtensions maps file extensions to image formats
+var formatExtensions = map[string]render.ImageFormat{
+	".png":  render.FormatPNG,
+	".jpg":  render.FormatJPG,
+	".jpeg": render.FormatJPEG,
+	".gif":  render.FormatGIF,
+	".webp": render.FormatWebP,
+}
+
 // extractFormat extracts the image format from a filename, returning the format and the name without extension
 func extractFormat(filename string) (render.ImageFormat, string) {
-	// Default to WebP
-	format := render.FormatWebP
-	name := filename
-
-	// Check for common extensions
-	if strings.HasSuffix(filename, ".png") {
-		format = render.FormatPNG
-		name = strings.TrimSuffix(filename, ".png")
-	} else if strings.HasSuffix(filename, ".jpg") {
-		format = render.FormatJPG
-		name = strings.TrimSuffix(filename, ".jpg")
-	} else if strings.HasSuffix(filename, ".jpeg") {
-		format = render.FormatJPEG
-		name = strings.TrimSuffix(filename, ".jpeg")
-	} else if strings.HasSuffix(filename, ".gif") {
-		format = render.FormatGIF
-		name = strings.TrimSuffix(filename, ".gif")
-	} else if strings.HasSuffix(filename, ".webp") {
-		format = render.FormatWebP
-		name = strings.TrimSuffix(filename, ".webp")
+	// Check for known extensions
+	for ext, format := range formatExtensions {
+		if strings.HasSuffix(filename, ext) {
+			return format, strings.TrimSuffix(filename, ext)
+		}
 	}
 
-	return format, name
+	// Default to WebP if no extension found
+	return render.FormatWebP, filename
 }
 
 // getContentType returns the MIME type for the given format
