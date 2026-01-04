@@ -1,5 +1,5 @@
 services:
-  avata-go:
+  grout:
     build:
       context: .
       dockerfile: Dockerfile

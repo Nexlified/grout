@@ -42,12 +42,12 @@ jobs:
           export GOOS=${{ matrix.goos }}
           export GOARCH=${{ matrix.goarch }}
           
-          BINARY_NAME="avata-go-${{ matrix.goos }}-${{ matrix.goarch }}"
+          BINARY_NAME="grout-${{ matrix.goos }}-${{ matrix.goarch }}"
           if [ "${{ matrix.goos }}" = "windows" ]; then
             BINARY_NAME="${BINARY_NAME}.exe"
           fi
           
-          go build -a -installsuffix cgo -ldflags="-w -s -X main.version=${{ github.event.release.tag_name }}" -o "${BINARY_NAME}" ./cmd/avata-go
+          go build -a -installsuffix cgo -ldflags="-w -s -X main.version=${{ github.event.release.tag_name }}" -o "${BINARY_NAME}" ./cmd/grout
           
           # Create archive
           if [ "${{ matrix.goos }}" = "windows" ]; then

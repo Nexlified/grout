@@ -13,7 +13,7 @@ docker compose up --build
 ### Using Go directly
 
 ```bash
-go run ./cmd/avata-go
+go run ./cmd/grout
 ```
 
 ### Using pre-built binaries
@@ -22,10 +22,10 @@ Download the latest release for your platform from the [Releases page](https://g
 
 ```bash
 # Linux/macOS
-./avata-go-linux-amd64
+./grout-linux-amd64
 
 # Windows
-avata-go-windows-amd64.exe
+grout-windows-amd64.exe
 ```
 
 The server listens on `:8080` by default and exposes the routes below.
@@ -121,19 +121,19 @@ environment:
 ### Build binary
 
 ```bash
-go build -o avata-go ./cmd/avata-go
+go build -o grout ./cmd/grout
 ```
 
 ### Build Docker image
 
 ```bash
-docker build -t avata-go .
+docker build -t grout .
 ```
 
 ### Run Docker container
 
 ```bash
-docker run -p 8080:8080 -e ADDR=":8080" avata-go
+docker run -p 8080:8080 -e ADDR=":8080" grout
 ```
 
 ## CI/CD

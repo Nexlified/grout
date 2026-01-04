@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o avata-go ./cmd/avata-go
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o grout ./cmd/grout
 
 # Final stage
 FROM alpine:latest
@@ -25,7 +25,7 @@ RUN apk add --no-cache libwebp ca-certificates
 WORKDIR /app
 
 # Copy binary from builder
-COPY --from=builder /build/avata-go .
+COPY --from=builder /build/grout .
 
 # Expose port
 EXPOSE 8080
@@ -35,5 +35,5 @@ ENV ADDR=":8080"
 ENV CACHE_SIZE="2000"
 
 # Run the application
-CMD ["./avata-go"]
+CMD ["./grout"]
 

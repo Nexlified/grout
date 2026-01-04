@@ -105,5 +105,5 @@ jobs:
           export CGO_ENABLED=0
           export GOOS=${{ matrix.goos }}
           export GOARCH=${{ matrix.goarch }}
-          go build -v -o avata-go-${{ matrix.goos }}-${{ matrix.goarch }} ./cmd/avata-go
+          go build -v -o grout-${{ matrix.goos }}-${{ matrix.goarch }} ./cmd/grout
 
