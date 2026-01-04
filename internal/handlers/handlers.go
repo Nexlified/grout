@@ -31,6 +31,7 @@ func NewService(renderer *render.Renderer, cache *lru.Cache[string, []byte], cfg
 func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/avatar/", s.handleAvatar)
 	mux.HandleFunc("/placeholder/", s.handlePlaceholder)
+	mux.HandleFunc("GET /health", s.HandleHealth)
 }
 
 var placeholderRegex = regexp.MustCompile(`^(\d+)x(\d+)$`)
