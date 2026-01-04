@@ -17,7 +17,7 @@ import (
 )
 
 //go:embed web/index.html
-var homePageHTML []byte
+var homePageTemplate string
 
 // Service bundles dependencies required by HTTP handlers.
 type Service struct {
@@ -198,9 +198,12 @@ func (s *Service) handleHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Replace {{DOMAIN}} placeholder with actual configured domain
+	html := strings.ReplaceAll(homePageTemplate, "{{DOMAIN}}", s.cfg.Domain)
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	_, err := w.Write(homePageHTML)
+	_, err := w.Write([]byte(html))
 	if err != nil {
 		return
 	}
