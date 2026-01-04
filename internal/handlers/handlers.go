@@ -183,10 +183,13 @@ func (s *Service) serveImage(w http.ResponseWriter, r *http.Request, cacheKey st
 func (s *Service) HandleHealth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{
+	err := json.NewEncoder(w).Encode(map[string]string{
 		"status":  "healthy",
 		"version": "1.0.0",
 	})
+	if err != nil {
+		return
+	}
 }
 
 func (s *Service) handleHome(w http.ResponseWriter, r *http.Request) {
@@ -197,5 +200,8 @@ func (s *Service) handleHome(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write(homePageHTML)
+	_, err := w.Write(homePageHTML)
+	if err != nil {
+		return
+	}
 }
