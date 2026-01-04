@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"crypto/md5"
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,6 +15,9 @@ import (
 	"grout/internal/render"
 	"grout/internal/utils"
 )
+
+//go:embed web/index.html
+var homePageHTML []byte
 
 // Service bundles dependencies required by HTTP handlers.
 type Service struct {
@@ -29,6 +33,7 @@ func NewService(renderer *render.Renderer, cache *lru.Cache[string, []byte], cfg
 
 // RegisterRoutes attaches handlers to the provided mux.
 func (s *Service) RegisterRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("/", s.handleHome)
 	mux.HandleFunc("/avatar/", s.handleAvatar)
 	mux.HandleFunc("/placeholder/", s.handlePlaceholder)
 	mux.HandleFunc("GET /health", s.HandleHealth)
@@ -182,4 +187,15 @@ func (s *Service) HandleHealth(w http.ResponseWriter, r *http.Request) {
 		"status":  "healthy",
 		"version": "1.0.0",
 	})
+}
+
+func (s *Service) handleHome(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write(homePageHTML)
 }
