@@ -256,9 +256,12 @@ func (s *Service) handleHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Service) handlePlay(w http.ResponseWriter, r *http.Request) {
+	// Replace {{DOMAIN}} placeholder with actual configured domain
+	html := strings.ReplaceAll(playPageTemplate, "{{DOMAIN}}", s.cfg.Domain)
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	_, err := w.Write([]byte(playPageTemplate))
+	_, err := w.Write([]byte(html))
 	if err != nil {
 		return
 	}
