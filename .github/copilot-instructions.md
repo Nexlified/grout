@@ -1,8 +1,8 @@
-# GitHub Copilot Instructions for AvataGo
+# GitHub Copilot Instructions for Grout
 
 ## Project Overview
 
-AvataGo is a high-performance HTTP service written in Go that generates PNG images on-demand:
+Grout is a high-performance HTTP service written in Go that generates PNG images on-demand:
 - **Avatar Generation**: Creates circular or square avatars with user initials
 - **Placeholder Images**: Generates rectangular placeholder images with custom dimensions and text
 - **Caching**: Uses in-memory LRU cache (2000 entries) with ETag support for optimal performance

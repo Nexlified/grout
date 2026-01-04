@@ -1,6 +1,6 @@
-# AvataGo API Guide
+# Grout API Guide
 
-AvataGo is a small HTTP service that renders PNG avatars with user initials and rectangular placeholder images. It relies on the `github.com/fogleman/gg` drawing library and embeds Go fonts for crisp text output.
+Grout is a small HTTP service that renders PNG avatars with user initials and rectangular placeholder images. It relies on the `github.com/fogleman/gg` drawing library and embeds Go fonts for crisp text output.
 
 ## Quick Start
 

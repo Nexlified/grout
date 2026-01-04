@@ -187,7 +187,7 @@ func TestHomeHandler(t *testing.T) {
 
 	body := rec.Body.String()
 	expectedStrings := []string{
-		"AvataGo",
+		"Grout",
 		"Made with love in Nexlified Lab",
 		"https://github.com/Nexlified/grout",
 		"Avatar Examples",

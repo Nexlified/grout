@@ -29,6 +29,6 @@ func main() {
 	mux := http.NewServeMux()
 	svc.RegisterRoutes(mux)
 
-	fmt.Println("AvataGo running on", cfg.Addr)
+	fmt.Println("Grout running on", cfg.Addr)
 	log.Fatal(http.ListenAndServe(cfg.Addr, mux))
 }
