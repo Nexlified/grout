@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /play
+Allow: /avatar/
+Allow: /placeholder/
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://{{DOMAIN}}/sitemap.xml

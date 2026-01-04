@@ -3,8 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grout - Avatar and Placeholder Image Generator</title>
+    <title>Grout - Fast Avatar & Placeholder Image Generator API | Free Online Tool</title>
+    <meta name="description" content="Grout is a high-performance HTTP API for generating avatar images with initials and placeholder images on-demand. Free, fast, and easy to use with support for WebP, PNG, JPG, and GIF formats. Perfect for developers building web applications.">
+    <meta name="keywords" content="avatar generator, placeholder image, image API, avatar API, initials avatar, placeholder generator, webp, png, jpg, dynamic images, REST API, free image service, developer tools">
+    <meta name="author" content="Nexlified">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://{{DOMAIN}}/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://{{DOMAIN}}/">
+    <meta property="og:title" content="Grout - Fast Avatar & Placeholder Image Generator API">
+    <meta property="og:description" content="High-performance HTTP API for generating avatar images with initials and placeholder images on-demand. Free, fast, and easy to use with multiple format support.">
+    <meta property="og:image" content="https://{{DOMAIN}}/placeholder/1200x630?text=Grout+Image+API&bg=667eea,764ba2&color=ffffff">
+    <meta property="og:site_name" content="Grout">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://{{DOMAIN}}/">
+    <meta name="twitter:title" content="Grout - Fast Avatar & Placeholder Image Generator API">
+    <meta name="twitter:description" content="High-performance HTTP API for generating avatar images with initials and placeholder images on-demand. Free, fast, and easy to use.">
+    <meta name="twitter:image" content="https://{{DOMAIN}}/placeholder/1200x630?text=Grout+Image+API&bg=667eea,764ba2&color=ffffff">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#667eea">
+    <meta name="msapplication-TileColor" content="#667eea">
+    
+    <!-- Mobile Web App -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Grout">
+    
     <link rel="icon" type="image/png" href="/favicon.ico">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Grout",
+      "description": "Fast, high-performance HTTP API for generating avatar images with initials and placeholder images on-demand",
+      "url": "https://{{DOMAIN}}/",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "Nexlified",
+        "url": "https://github.com/Nexlified"
+      },
+      "featureList": [
+        "Generate circular or square avatars with user initials",
+        "Create custom placeholder images with any dimensions",
+        "Support for multiple formats: WebP, PNG, JPG, GIF",
+        "Smart in-memory LRU caching for optimal performance",
+        "ETag support for conditional requests",
+        "Customizable colors, sizes, and styles",
+        "REST API with simple query parameters"
+      ]
+    }
+    </script>
     <style>
         * {
             margin: 0;
@@ -287,49 +350,50 @@
     <div class="copy-feedback" id="copyFeedback">Link copied to clipboard!</div>
     <div class="container">
         <header>
-            <h1>🎨 Grout</h1>
-            <p>Fast, lightweight avatar and placeholder image generator</p>
-            <a href="/play" class="playground-link">🎮 Try the Interactive Playground</a>
+            <h1>🎨 Grout - Free Avatar & Placeholder Image API</h1>
+            <p>Fast, lightweight image generator for developers - Create avatars with initials and custom placeholders instantly</p>
+            <a href="/play" class="playground-link" aria-label="Open interactive playground to try Grout API">🎮 Try the Interactive Playground</a>
         </header>
         
-        <div class="content">
-            <div class="section">
-                <h2>About Grout</h2>
-                <p>Grout is a high-performance HTTP service written in Go that generates images on-demand. Whether you need user avatars with initials or placeholder images for your designs, Grout delivers them instantly with smart caching and multiple format support.</p>
+        <main class="content">
+            <article class="section">
+                <h2>About Grout - Professional Image Generation API</h2>
+                <p>Grout is a high-performance HTTP service written in Go that generates images on-demand. Whether you need user avatars with initials or placeholder images for your designs, Grout delivers them instantly with smart caching and multiple format support. Built for developers who need reliable, fast image generation without complex dependencies.</p>
                 <p><strong>Key Features:</strong></p>
                 <ul style="margin-left: 20px; color: #555;">
-                    <li>Generate circular or square avatars with user initials</li>
-                    <li>Create custom placeholder images with any dimensions</li>
-                    <li>Support for multiple formats: WebP, PNG, JPG, GIF</li>
-                    <li>Smart in-memory LRU caching for optimal performance</li>
-                    <li>ETag support for conditional requests</li>
-                    <li>Customizable colors, sizes, and styles</li>
+                    <li>Generate circular or square avatars with user initials automatically</li>
+                    <li>Create custom placeholder images with any dimensions and text</li>
+                    <li>Support for multiple formats: WebP, PNG, JPG, and GIF</li>
+                    <li>Smart in-memory LRU caching for optimal performance and speed</li>
+                    <li>ETag support for conditional requests and CDN optimization</li>
+                    <li>Customizable colors, sizes, and styles via simple URL parameters</li>
+                    <li>Free, open-source, and self-hostable for complete control</li>
                 </ul>
-            </div>
+            </article>
 
-            <div class="section">
-                <h2>Avatar Examples</h2>
+            <section class="section">
+                <h2>Avatar API Examples - Generate User Initials Images</h2>
                 <div class="examples">
                     <div class="example-card">
-                        <img src="/avatar/John+Doe?size=128&rounded=false" alt="Square Avatar">
+                        <img src="/avatar/John+Doe?size=128&rounded=false" alt="Square avatar with JD initials - Grout avatar generator example" loading="lazy">
                         <h3>Square Avatar</h3>
                         <code>https://{{DOMAIN}}/avatar/John+Doe?size=128</code>
                     </div>
                     <div class="example-card">
-                        <img src="/avatar/Jane+Smith?size=128&rounded=true&background=random" alt="Round Avatar">
+                        <img src="/avatar/Jane+Smith?size=128&rounded=true&background=random" alt="Round avatar with JS initials and random color - Grout avatar API example" loading="lazy">
                         <h3>Round Avatar (Random Color)</h3>
                         <code>https://{{DOMAIN}}/avatar/Jane+Smith?size=128&rounded=true&background=random</code>
                     </div>
                     <div class="example-card">
-                        <img src="/avatar/Alex+Johnson?size=128&rounded=true&bold=true&background=3498db&color=ffffff" alt="Custom Avatar">
+                        <img src="/avatar/Alex+Johnson?size=128&rounded=true&bold=true&background=3498db&color=ffffff" alt="Custom colored avatar with AJ initials and bold text - Grout API example" loading="lazy">
                         <h3>Custom Colors & Bold</h3>
                         <code>https://{{DOMAIN}}/avatar/Alex+Johnson?size=128&rounded=true&bold=true&background=3498db&color=ffffff</code>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="section">
-                <h2>Avatar URL Parameters</h2>
+            <section class="section">
+                <h2>Avatar URL Parameters - Customize Your Images</h2>
                 <table class="params-table" role="region" aria-label="Avatar URL Parameters" tabindex="0">
                     <thead>
                         <tr>
@@ -384,31 +448,31 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </section>
 
-            <div class="section">
-                <h2>Placeholder Examples</h2>
+            <section class="section">
+                <h2>Placeholder Image API Examples - Dynamic Placeholder Generator</h2>
                 <div class="examples">
                     <div class="example-card">
-                        <img src="/placeholder/300x200?bg=cccccc" alt="Basic Placeholder">
+                        <img src="/placeholder/300x200?bg=cccccc" alt="Basic placeholder image 300x200 - Grout placeholder generator example" loading="lazy">
                         <h3>Basic Placeholder</h3>
                         <code>https://{{DOMAIN}}/placeholder/300x200</code>
                     </div>
                     <div class="example-card">
-                        <img src="/placeholder/300x200?text=Hero+Image&bg=2c3e50&color=ecf0f1" alt="Custom Text">
+                        <img src="/placeholder/300x200?text=Hero+Image&bg=2c3e50&color=ecf0f1" alt="Custom placeholder with hero text and dark background - Grout API example" loading="lazy">
                         <h3>Custom Text & Colors</h3>
                         <code>https://{{DOMAIN}}/placeholder/300x200?text=Hero+Image&bg=2c3e50&color=ecf0f1</code>
                     </div>
                     <div class="example-card">
-                        <img src="/placeholder/300x200?bg=e74c3c,3498db&text=Gradient" alt="Gradient Background">
+                        <img src="/placeholder/300x200?bg=e74c3c,3498db&text=Gradient" alt="Gradient placeholder image red to blue - Grout gradient generator example" loading="lazy">
                         <h3>Gradient Background</h3>
                         <code>https://{{DOMAIN}}/placeholder/300x200?bg=e74c3c,3498db&text=Gradient</code>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="section">
-                <h2>Placeholder URL Parameters</h2>
+            <section class="section">
+                <h2>Placeholder URL Parameters - Full Customization Options</h2>
                 <table class="params-table" role="region" aria-label="Placeholder URL Parameters" tabindex="0">
                     <thead>
                         <tr>
@@ -463,8 +527,8 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
+            </section>
+        </main>
 
         <footer>
             <p>Made with love in Nexlified Lab</p>

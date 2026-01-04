@@ -32,6 +32,12 @@ var error5xxTemplate string
 //go:embed web/favicon.png
 var faviconData []byte
 
+//go:embed web/robots.txt
+var robotsTxtTemplate string
+
+//go:embed web/sitemap.xml
+var sitemapXmlTemplate string
+
 // Service bundles dependencies required by HTTP handlers.
 type Service struct {
 	renderer       *render.Renderer
@@ -58,6 +64,8 @@ func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/placeholder/", s.handlePlaceholder)
 	mux.HandleFunc("GET /health", s.HandleHealth)
 	mux.HandleFunc("GET /favicon.ico", s.handleFavicon)
+	mux.HandleFunc("GET /robots.txt", s.handleRobotsTxt)
+	mux.HandleFunc("GET /sitemap.xml", s.handleSitemapXml)
 }
 
 var placeholderRegex = regexp.MustCompile(`^(\d+)x(\d+)$`)
@@ -323,3 +331,30 @@ func (s *Service) handle404(w http.ResponseWriter, r *http.Request) {
 	message := "The page you're looking for doesn't exist. It might have been moved or deleted."
 	s.serveErrorPage(w, http.StatusNotFound, message)
 }
+
+func (s *Service) handleRobotsTxt(w http.ResponseWriter, r *http.Request) {
+	// Replace {{DOMAIN}} placeholder with actual configured domain
+	content := strings.ReplaceAll(robotsTxtTemplate, "{{DOMAIN}}", s.cfg.Domain)
+
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Cache-Control", "public, max-age=86400")
+	w.WriteHeader(http.StatusOK)
+	_, err := w.Write([]byte(content))
+	if err != nil {
+		return
+	}
+}
+
+func (s *Service) handleSitemapXml(w http.ResponseWriter, r *http.Request) {
+	// Replace {{DOMAIN}} placeholder with actual configured domain
+	content := strings.ReplaceAll(sitemapXmlTemplate, "{{DOMAIN}}", s.cfg.Domain)
+
+	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+	w.Header().Set("Cache-Control", "public, max-age=86400")
+	w.WriteHeader(http.StatusOK)
+	_, err := w.Write([]byte(content))
+	if err != nil {
+		return
+	}
+}
+

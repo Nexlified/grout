@@ -190,8 +190,8 @@ func TestHomeHandler(t *testing.T) {
 		"Grout",
 		"Made with love in Nexlified Lab",
 		"https://github.com/Nexlified/grout",
-		"Avatar Examples",
-		"Placeholder Examples",
+		"Avatar API Examples",
+		"Placeholder Image API Examples",
 		"Avatar URL Parameters",
 		"Placeholder URL Parameters",
 	}
@@ -466,4 +466,82 @@ func TestServeErrorPage5xx(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestRobotsTxtHandler(t *testing.T) {
+renderer, err := render.New()
+if err != nil {
+t.Fatalf("renderer init: %v", err)
+}
+cache, _ := lru.New[string, []byte](1)
+cfg := config.DefaultServerConfig()
+cfg.Domain = "example.com"
+svc := NewService(renderer, cache, cfg)
+mux := http.NewServeMux()
+svc.RegisterRoutes(mux)
+
+req := httptest.NewRequest(http.MethodGet, "/robots.txt", nil)
+rec := httptest.NewRecorder()
+
+mux.ServeHTTP(rec, req)
+
+if rec.Code != http.StatusOK {
+t.Fatalf("expected 200 got %d", rec.Code)
+}
+if ct := rec.Header().Get("Content-Type"); ct != "text/plain; charset=utf-8" {
+t.Fatalf("expected content-type text/plain; charset=utf-8 got %s", ct)
+}
+
+body := rec.Body.String()
+expectedStrings := []string{
+"User-agent: *",
+"Allow: /",
+"Sitemap: https://example.com/sitemap.xml",
+}
+
+for _, expected := range expectedStrings {
+if !strings.Contains(body, expected) {
+t.Errorf("expected body to contain %q", expected)
+}
+}
+}
+
+func TestSitemapXmlHandler(t *testing.T) {
+renderer, err := render.New()
+if err != nil {
+t.Fatalf("renderer init: %v", err)
+}
+cache, _ := lru.New[string, []byte](1)
+cfg := config.DefaultServerConfig()
+cfg.Domain = "example.com"
+svc := NewService(renderer, cache, cfg)
+mux := http.NewServeMux()
+svc.RegisterRoutes(mux)
+
+req := httptest.NewRequest(http.MethodGet, "/sitemap.xml", nil)
+rec := httptest.NewRecorder()
+
+mux.ServeHTTP(rec, req)
+
+if rec.Code != http.StatusOK {
+t.Fatalf("expected 200 got %d", rec.Code)
+}
+if ct := rec.Header().Get("Content-Type"); ct != "application/xml; charset=utf-8" {
+t.Fatalf("expected content-type application/xml; charset=utf-8 got %s", ct)
+}
+
+body := rec.Body.String()
+expectedStrings := []string{
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+"<urlset",
+"https://example.com/",
+"https://example.com/play",
+"<priority>1.0</priority>",
+}
+
+for _, expected := range expectedStrings {
+if !strings.Contains(body, expected) {
+t.Errorf("expected body to contain %q", expected)
+}
+}
 }
