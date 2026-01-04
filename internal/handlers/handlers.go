@@ -357,4 +357,3 @@ func (s *Service) handleSitemapXml(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
