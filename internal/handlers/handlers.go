@@ -19,6 +19,9 @@ import (
 //go:embed web/index.html
 var homePageTemplate string
 
+//go:embed web/favicon.png
+var faviconData []byte
+
 // Service bundles dependencies required by HTTP handlers.
 type Service struct {
 	renderer *render.Renderer
@@ -37,6 +40,7 @@ func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/avatar/", s.handleAvatar)
 	mux.HandleFunc("/placeholder/", s.handlePlaceholder)
 	mux.HandleFunc("GET /health", s.HandleHealth)
+	mux.HandleFunc("GET /favicon.ico", s.handleFavicon)
 }
 
 var placeholderRegex = regexp.MustCompile(`^(\d+)x(\d+)$`)
@@ -204,6 +208,16 @@ func (s *Service) handleHome(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte(html))
+	if err != nil {
+		return
+	}
+}
+
+func (s *Service) handleFavicon(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "image/png")
+	w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+	w.WriteHeader(http.StatusOK)
+	_, err := w.Write(faviconData)
 	if err != nil {
 		return
 	}
