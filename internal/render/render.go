@@ -135,7 +135,7 @@ func encodeImage(img image.Image, format ImageFormat, w, h int, bgHex, fgHex, te
 	switch format {
 	case FormatSVG:
 		// Generate SVG directly without rasterizing
-		return generateSVG(w, h, bgHex, fgHex, text, rounded, fontSize)
+		return generateSVG(w, h, bgHex, fgHex, text, rounded, bold, fontSize)
 	case FormatPNG:
 		if err := png.Encode(&buf, img); err != nil {
 			return nil, fmt.Errorf("encode png: %w", err)
@@ -161,7 +161,7 @@ func encodeImage(img image.Image, format ImageFormat, w, h int, bgHex, fgHex, te
 }
 
 // generateSVG creates an SVG representation of the image
-func generateSVG(w, h int, bgHex, fgHex, text string, rounded bool, fontSize float64) ([]byte, error) {
+func generateSVG(w, h int, bgHex, fgHex, text string, rounded, bold bool, fontSize float64) ([]byte, error) {
 	var buf bytes.Buffer
 
 	// SVG header
@@ -203,8 +203,12 @@ func generateSVG(w, h int, bgHex, fgHex, text string, rounded bool, fontSize flo
 	// Text element
 	// SVG text is positioned by baseline, so we need to adjust
 	// Using dominant-baseline="middle" and text-anchor="middle" for centering
-	buf.WriteString(fmt.Sprintf(`<text x="%d" y="%d" font-family="Arial, Helvetica, sans-serif" font-size="%.0f" fill="#%s" text-anchor="middle" dominant-baseline="middle">%s</text>`,
-		w/2, h/2, fontSize, fgHex, escapeXML(text)))
+	fontWeight := "normal"
+	if bold {
+		fontWeight = "bold"
+	}
+	buf.WriteString(fmt.Sprintf(`<text x="%d" y="%d" font-family="Arial, Helvetica, sans-serif" font-size="%.0f" font-weight="%s" fill="#%s" text-anchor="middle" dominant-baseline="middle">%s</text>`,
+		w/2, h/2, fontSize, fontWeight, fgHex, escapeXML(text)))
 	buf.WriteString("\n")
 
 	// Close SVG

@@ -118,3 +118,30 @@ func TestDrawImageWithSVGFormat(t *testing.T) {
 		})
 	}
 }
+
+func TestDrawImageWithSVGBold(t *testing.T) {
+r, err := New()
+if err != nil {
+t.Fatalf("failed to create renderer: %v", err)
+}
+
+// Test with bold=false
+normalData, err := r.DrawImageWithFormat(200, 200, "cccccc", "000000", "AB", false, false, FormatSVG)
+if err != nil {
+t.Fatalf("failed to draw normal SVG: %v", err)
+}
+normalStr := string(normalData)
+if !strings.Contains(normalStr, `font-weight="normal"`) {
+t.Fatalf("expected normal font-weight, got: %s", normalStr)
+}
+
+// Test with bold=true
+boldData, err := r.DrawImageWithFormat(200, 200, "cccccc", "000000", "AB", false, true, FormatSVG)
+if err != nil {
+t.Fatalf("failed to draw bold SVG: %v", err)
+}
+boldStr := string(boldData)
+if !strings.Contains(boldStr, `font-weight="bold"`) {
+t.Fatalf("expected bold font-weight, got: %s", boldStr)
+}
+}
