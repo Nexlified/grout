@@ -35,7 +35,7 @@ type Service struct {
 func NewService(renderer *render.Renderer, cache *lru.Cache[string, []byte], cfg config.ServerConfig) *Service {
 	contentManager, err := content.NewManager()
 	if err != nil {
-		// Log error but don't fail - quotes/jokes will just be unavailable
+		// Content manager is optional - quotes/jokes will be unavailable but service will still work
 		contentManager = nil
 	}
 	return &Service{renderer: renderer, cache: cache, cfg: cfg, contentManager: contentManager}

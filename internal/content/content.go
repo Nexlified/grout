@@ -3,7 +3,7 @@ package content
 import (
 	_ "embed"
 	"fmt"
-	"math/rand"
+	"math/rand/v2"
 
 	"gopkg.in/yaml.v3"
 )
@@ -70,7 +70,7 @@ func (m *Manager) GetRandom(contentType ContentType, category string) (string, e
 		if !exists || len(items) == 0 {
 			return "", fmt.Errorf("%s category '%s' not found or empty", typeName, category)
 		}
-		return items[rand.Intn(len(items))], nil
+		return items[rand.IntN(len(items))], nil
 	}
 
 	// No category specified - collect all items from all categories
@@ -83,7 +83,7 @@ func (m *Manager) GetRandom(contentType ContentType, category string) (string, e
 		return "", fmt.Errorf("no %ss available", typeName)
 	}
 
-	return allItems[rand.Intn(len(allItems))], nil
+	return allItems[rand.IntN(len(allItems))], nil
 }
 
 // GetCategories returns all available categories for a given content type
