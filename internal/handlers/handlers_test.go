@@ -222,3 +222,33 @@ func TestHomeHandlerNotFound(t *testing.T) {
 		t.Fatalf("expected 404 got %d", rec.Code)
 	}
 }
+
+func TestFaviconHandler(t *testing.T) {
+	renderer, err := render.New()
+	if err != nil {
+		t.Fatalf("renderer init: %v", err)
+	}
+	cache, _ := lru.New[string, []byte](1)
+	svc := NewService(renderer, cache, config.DefaultServerConfig())
+	mux := http.NewServeMux()
+	svc.RegisterRoutes(mux)
+
+	req := httptest.NewRequest(http.MethodGet, "/favicon.ico", nil)
+	rec := httptest.NewRecorder()
+
+	mux.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected 200 got %d", rec.Code)
+	}
+	if ct := rec.Header().Get("Content-Type"); ct != "image/png" {
+		t.Fatalf("expected content-type image/png got %s", ct)
+	}
+	if rec.Body.Len() == 0 {
+		t.Fatal("expected body to contain favicon data")
+	}
+	// Check for cache control header
+	if cc := rec.Header().Get("Cache-Control"); !strings.Contains(cc, "max-age") {
+		t.Fatalf("expected Cache-Control header with max-age, got %s", cc)
+	}
+}
