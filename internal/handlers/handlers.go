@@ -291,15 +291,12 @@ func (s *Service) handleFavicon(w http.ResponseWriter, r *http.Request) {
 func (s *Service) serveErrorPage(w http.ResponseWriter, statusCode int, message string) {
 	var template string
 	var statusText string
-	var icon string
 
 	// Determine which template to use based on status code
 	if statusCode >= 400 && statusCode < 500 {
 		template = error4xxTemplate
-		icon = "🔍"
 	} else {
 		template = error5xxTemplate
-		icon = "⚠️"
 	}
 
 	// Get standard status text
@@ -312,7 +309,6 @@ func (s *Service) serveErrorPage(w http.ResponseWriter, statusCode int, message 
 	html := strings.ReplaceAll(template, "{{STATUS_CODE}}", fmt.Sprintf("%d", statusCode))
 	html = strings.ReplaceAll(html, "{{STATUS_TEXT}}", statusText)
 	html = strings.ReplaceAll(html, "{{ERROR_MESSAGE}}", message)
-	html = strings.ReplaceAll(html, "{{ERROR_ICON}}", icon)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(statusCode)
