@@ -16,18 +16,6 @@ docker compose up --build
 go run ./cmd/grout
 ```
 
-### Using pre-built binaries
-
-Download the latest release for your platform from the [Releases page](https://github.com/your-username/grout/releases) and run:
-
-```bash
-# Linux/macOS
-./grout-linux-amd64
-
-# Windows
-grout-windows-amd64.exe
-```
-
 The server listens on `:8080` by default and exposes the routes below.
 
 ## `/avatar/` Endpoint
@@ -185,20 +173,9 @@ Runs on every pull request and push to main/master:
 - **Lint**: Runs `golangci-lint` for code quality checks
 - **Format**: Verifies code is properly formatted with `go fmt`
 - **Vet**: Runs `go vet` to catch common issues
-- **Build Check**: Ensures the code builds successfully for all target platforms
 - **Coverage**: Optionally uploads coverage to Codecov (requires `CODECOV_TOKEN` secret)
 
-### Release Workflow (`.github/workflows/release.yml`)
-Runs when you create a GitHub release:
-- Builds binaries for Linux, macOS, and Windows (amd64 and arm64)
-- Attaches them to GitHub releases
-- Builds and pushes multi-platform Docker images to Docker Hub (if credentials are configured)
-
 ### Setup Secrets
-
-To enable Docker Hub publishing, add these secrets to your GitHub repository:
-- `DOCKER_USERNAME`: Your Docker Hub username
-- `DOCKER_PASSWORD`: Your Docker Hub access token
 
 To enable Codecov integration (optional):
 - `CODECOV_TOKEN`: Your Codecov upload token
