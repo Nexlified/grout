@@ -1,6 +1,9 @@
 package render
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestGetInitials(t *testing.T) {
 	cases := []struct {
@@ -70,5 +73,48 @@ func TestDrawImageWithGradient(t *testing.T) {
 	_, err = r.DrawImageWithFormat(400, 300, "ff0000,00ff00,0000ff", "ffffff", "Test", false, false, FormatPNG)
 	if err != nil {
 		t.Fatalf("failed to draw image with more than 2 colors: %v", err)
+	}
+}
+
+func TestDrawImageWithSVGFormat(t *testing.T) {
+	r, err := New()
+	if err != nil {
+		t.Fatalf("failed to create renderer: %v", err)
+	}
+
+	tests := []struct {
+		name    string
+		width   int
+		height  int
+		bg      string
+		fg      string
+		text    string
+		rounded bool
+	}{
+		{"Simple SVG", 200, 200, "cccccc", "000000", "AB", false},
+		{"Rounded SVG", 128, 128, "f0e9e9", "8b5d5d", "JD", true},
+		{"Gradient SVG", 400, 300, "ff0000,0000ff", "ffffff", "Test", false},
+		{"Large text SVG", 500, 300, "333333", "ffffff", "Hello World", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			data, err := r.DrawImageWithFormat(tt.width, tt.height, tt.bg, tt.fg, tt.text, tt.rounded, false, FormatSVG)
+			if err != nil {
+				t.Fatalf("failed to draw SVG: %v", err)
+			}
+			if len(data) == 0 {
+				t.Fatal("expected SVG data, got empty")
+			}
+			// Verify it starts with SVG tag
+			svgStr := string(data)
+			if !strings.HasPrefix(svgStr, "<svg") {
+				t.Fatalf("expected SVG to start with <svg, got: %s", svgStr[:20])
+			}
+			// Verify it contains the text
+			if !strings.Contains(svgStr, tt.text) {
+				t.Fatalf("expected SVG to contain text '%s', got: %s", tt.text, svgStr)
+			}
+		})
 	}
 }

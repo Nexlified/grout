@@ -69,6 +69,7 @@ var formatExtensions = map[string]render.ImageFormat{
 	".jpeg": render.FormatJPEG,
 	".gif":  render.FormatGIF,
 	".webp": render.FormatWebP,
+	".svg":  render.FormatSVG,
 }
 
 // extractFormat extracts the image format from a filename, returning the format and the name without extension
@@ -80,8 +81,8 @@ func extractFormat(filename string) (render.ImageFormat, string) {
 		}
 	}
 
-	// Default to WebP if no extension found
-	return render.FormatWebP, filename
+	// Default to SVG if no extension found
+	return render.FormatSVG, filename
 }
 
 // getContentType returns the MIME type for the given format
@@ -95,14 +96,16 @@ func getContentType(format render.ImageFormat) string {
 		return "image/gif"
 	case render.FormatWebP:
 		return "image/webp"
+	case render.FormatSVG:
+		return "image/svg+xml"
 	default:
-		return "image/webp"
+		return "image/svg+xml"
 	}
 }
 
 func (s *Service) handleAvatar(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
-	format := render.FormatWebP // Default to WebP
+	format := render.FormatSVG // Default to SVG
 
 	if strings.HasPrefix(r.URL.Path, "/avatar/") {
 		parts := strings.Split(r.URL.Path, "/")

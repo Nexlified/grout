@@ -30,9 +30,9 @@ func TestAvatarHandlerDefaults(t *testing.T) {
 	if rec.Code != http.StatusOK {
 		t.Fatalf("expected 200 got %d", rec.Code)
 	}
-	// Default format is now WebP
-	if ct := rec.Header().Get("Content-Type"); ct != "image/webp" {
-		t.Fatalf("expected content-type image/webp got %s", ct)
+	// Default format is now SVG
+	if ct := rec.Header().Get("Content-Type"); ct != "image/svg+xml" {
+		t.Fatalf("expected content-type image/svg+xml got %s", ct)
 	}
 	if rec.Body.Len() == 0 {
 		t.Fatal("expected body to contain image data")
@@ -59,7 +59,8 @@ func TestAvatarHandlerFormats(t *testing.T) {
 		{"JPEG format", "/avatar/JohnDoe.jpeg", "image/jpeg"},
 		{"GIF format", "/avatar/JohnDoe.gif", "image/gif"},
 		{"WebP format", "/avatar/JohnDoe.webp", "image/webp"},
-		{"No extension defaults to WebP", "/avatar/JohnDoe", "image/webp"},
+		{"SVG format", "/avatar/JohnDoe.svg", "image/svg+xml"},
+		{"No extension defaults to SVG", "/avatar/JohnDoe", "image/svg+xml"},
 	}
 
 	for _, tt := range tests {
@@ -101,7 +102,8 @@ func TestPlaceholderHandlerFormats(t *testing.T) {
 		{"JPG format", "/placeholder/200x100.jpg", "image/jpeg"},
 		{"GIF format", "/placeholder/200x100.gif", "image/gif"},
 		{"WebP format", "/placeholder/200x100.webp", "image/webp"},
-		{"No extension defaults to WebP", "/placeholder/200x100", "image/webp"},
+		{"SVG format", "/placeholder/200x100.svg", "image/svg+xml"},
+		{"No extension defaults to SVG", "/placeholder/200x100", "image/svg+xml"},
 	}
 
 	for _, tt := range tests {
