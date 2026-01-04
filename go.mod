@@ -1,4 +1,4 @@
-module go-avatars
+module grout
 
 go 1.24.0
 

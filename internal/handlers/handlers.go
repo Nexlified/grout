@@ -10,9 +10,9 @@ import (
 
 	"github.com/hashicorp/golang-lru/v2"
 
-	"go-avatars/internal/config"
-	"go-avatars/internal/render"
-	"go-avatars/internal/utils"
+	"grout/internal/config"
+	"grout/internal/render"
+	"grout/internal/utils"
 )
 
 // Service bundles dependencies required by HTTP handlers.

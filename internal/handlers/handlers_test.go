@@ -7,8 +7,8 @@ import (
 
 	"github.com/hashicorp/golang-lru/v2"
 
-	"go-avatars/internal/config"
-	"go-avatars/internal/render"
+	"grout/internal/config"
+	"grout/internal/render"
 )
 
 func TestAvatarHandlerDefaults(t *testing.T) {
