@@ -209,13 +209,14 @@ func generateSVG(w, h int, bgHex, fgHex, text string, rounded, bold bool, fontSi
 	buf.WriteString("\n")
 
 	// Text element
-	// SVG text is positioned by baseline, so we need to adjust
-	// Using dominant-baseline="middle" and text-anchor="middle" for centering
+	// SVG text is positioned by baseline, so we need to adjust.
+	// Use a generic sans-serif family to broadly match the embedded Go fonts (goregular/gobold).
+	// Using dominant-baseline="middle" and text-anchor="middle" for centering.
 	fontWeight := "normal"
 	if bold {
 		fontWeight = "bold"
 	}
-	buf.WriteString(fmt.Sprintf(`<text x="%d" y="%d" font-family="Arial, Helvetica, sans-serif" font-size="%.0f" font-weight="%s" fill="#%s" text-anchor="middle" dominant-baseline="middle">%s</text>`,
+	buf.WriteString(fmt.Sprintf(`<text x="%d" y="%d" font-family="sans-serif" font-size="%.0f" font-weight="%s" fill="#%s" text-anchor="middle" dominant-baseline="middle">%s</text>`,
 		w/2, h/2, fontSize, fontWeight, fgHex, escapeXML(text)))
 	buf.WriteString("\n")
 
