@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placeholder Playground - Grout</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        .back-link {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .playground {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+        }
+        .controls {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+        .controls h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 0.875rem;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        .color-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .color-input-group input[type="text"] {
+            flex: 1;
+        }
+        .color-input-group input[type="color"] {
+            width: 50px;
+            height: 42px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 2px;
+        }
+        .preview {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 600px;
+        }
+        .preview h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        .preview-image {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .preview-url {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            word-break: break-all;
+            font-size: 0.9rem;
+            color: #d63384;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+        .copy-btn:active {
+            background: #4c5fc7;
+        }
+        .copy-feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+        .copy-feedback.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 968px) {
+            .playground {
+                grid-template-columns: 1fr;
+            }
+            .back-link {
+                position: static;
+                display: inline-block;
+                margin-bottom: 20px;
+            }
+            header {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .playground {
+                padding: 20px;
+            }
+            .controls, .preview {
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-feedback" id="copyFeedback">URL copied to clipboard!</div>
+    <div class="container">
+        <header>
+            <a href="/" class="back-link">← Back to Home</a>
+            <h1>🎨 Placeholder Playground</h1>
+            <p>Experiment with different parameters and see your placeholder image in real-time</p>
+        </header>
+        
+        <div class="playground">
+            <div class="controls">
+                <h2>Image Settings</h2>
+                <form id="playgroundForm">
+                    <div class="form-group">
+                        <label for="width">Width (px)</label>
+                        <input type="number" id="width" name="width" value="400" min="1" max="2000">
+                        <small>Image width in pixels (1-2000)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="height">Height (px)</label>
+                        <input type="number" id="height" name="height" value="300" min="1" max="2000">
+                        <small>Image height in pixels (1-2000)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="text">Text</label>
+                        <input type="text" id="text" name="text" value="" placeholder="Leave empty for dimensions">
+                        <small>Custom text to display (default: width x height)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bg">Background Color</label>
+                        <div class="color-input-group">
+                            <input type="text" id="bg" name="bg" value="cccccc" placeholder="cccccc">
+                            <input type="color" id="bgPicker" value="#cccccc">
+                        </div>
+                        <small>Hex color without # (e.g., cccccc)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="color">Text Color</label>
+                        <div class="color-input-group">
+                            <input type="text" id="color" name="color" value="" placeholder="auto">
+                            <input type="color" id="colorPicker" value="#333333">
+                        </div>
+                        <small>Hex color without # (leave empty for auto-contrast)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="format">Image Format</label>
+                        <select id="format" name="format">
+                            <option value="webp">WebP</option>
+                            <option value="png">PNG</option>
+                            <option value="jpg">JPEG</option>
+                            <option value="gif">GIF</option>
+                        </select>
+                        <small>Output image format</small>
+                    </div>
+                </form>
+            </div>
+
+            <div class="preview">
+                <h2>Live Preview</h2>
+                <img id="previewImage" class="preview-image" src="/placeholder/400x300" alt="Preview">
+                <div class="preview-url" id="previewUrl">http://localhost:8080/placeholder/400x300</div>
+                <button class="copy-btn" id="copyUrlBtn">Copy URL</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get form elements
+        const form = document.getElementById('playgroundForm');
+        const widthInput = document.getElementById('width');
+        const heightInput = document.getElementById('height');
+        const textInput = document.getElementById('text');
+        const bgInput = document.getElementById('bg');
+        const bgPicker = document.getElementById('bgPicker');
+        const colorInput = document.getElementById('color');
+        const colorPicker = document.getElementById('colorPicker');
+        const formatSelect = document.getElementById('format');
+        
+        // Get preview elements
+        const previewImage = document.getElementById('previewImage');
+        const previewUrl = document.getElementById('previewUrl');
+        const copyUrlBtn = document.getElementById('copyUrlBtn');
+        const copyFeedback = document.getElementById('copyFeedback');
+
+        // Sync color picker with text input
+        bgPicker.addEventListener('input', function() {
+            const hex = bgPicker.value.substring(1);
+            bgInput.value = hex;
+            updatePreview();
+        });
+
+        bgInput.addEventListener('input', function() {
+            let hex = bgInput.value.replace('#', '');
+            if (/^[0-9A-Fa-f]{6}$/.test(hex)) {
+                bgPicker.value = '#' + hex;
+            }
+            updatePreview();
+        });
+
+        colorPicker.addEventListener('input', function() {
+            const hex = colorPicker.value.substring(1);
+            colorInput.value = hex;
+            updatePreview();
+        });
+
+        colorInput.addEventListener('input', function() {
+            let hex = colorInput.value.replace('#', '');
+            if (/^[0-9A-Fa-f]{6}$/.test(hex)) {
+                colorPicker.value = '#' + hex;
+            }
+            updatePreview();
+        });
+
+        // Update preview on any input change
+        form.addEventListener('input', updatePreview);
+        form.addEventListener('change', updatePreview);
+
+        function updatePreview() {
+            const width = parseInt(widthInput.value) || 400;
+            const height = parseInt(heightInput.value) || 300;
+            const text = textInput.value.trim();
+            const bg = bgInput.value.trim() || 'cccccc';
+            const color = colorInput.value.trim();
+            const format = formatSelect.value;
+
+            // Build URL
+            const baseUrl = window.location.origin;
+            let path = `/placeholder/${width}x${height}.${format}`;
+            const params = new URLSearchParams();
+
+            if (text) {
+                params.append('text', text);
+            }
+            if (bg && bg !== 'cccccc') {
+                params.append('bg', bg);
+            }
+            if (color) {
+                params.append('color', color);
+            }
+
+            const queryString = params.toString();
+            const fullUrl = queryString ? `${path}?${queryString}` : path;
+            const absoluteUrl = `${baseUrl}${fullUrl}`;
+
+            // Update preview
+            previewImage.src = fullUrl;
+            previewUrl.textContent = absoluteUrl;
+        }
+
+        // Copy URL to clipboard
+        copyUrlBtn.addEventListener('click', function() {
+            const url = previewUrl.textContent;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(function() {
+                    showCopyFeedback();
+                }).catch(function() {
+                    fallbackCopy(url);
+                });
+            } else {
+                fallbackCopy(url);
+            }
+        });
+
+        function showCopyFeedback() {
+            copyFeedback.classList.add('show');
+            setTimeout(function() {
+                copyFeedback.classList.remove('show');
+            }, 2000);
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showCopyFeedback();
+            } catch (err) {
+                console.error('Failed to copy text:', err);
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        // Initial preview update
+        updatePreview();
+    </script>
+</body>
+</html>

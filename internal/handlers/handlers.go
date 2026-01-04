@@ -20,6 +20,9 @@ import (
 //go:embed web/index.html
 var homePageTemplate string
 
+//go:embed web/play.html
+var playPageTemplate string
+
 //go:embed web/favicon.png
 var faviconData []byte
 
@@ -44,6 +47,7 @@ func NewService(renderer *render.Renderer, cache *lru.Cache[string, []byte], cfg
 // RegisterRoutes attaches handlers to the provided mux.
 func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/", s.handleHome)
+	mux.HandleFunc("/play", s.handlePlay)
 	mux.HandleFunc("/avatar/", s.handleAvatar)
 	mux.HandleFunc("/placeholder/", s.handlePlaceholder)
 	mux.HandleFunc("GET /health", s.HandleHealth)
@@ -246,6 +250,15 @@ func (s *Service) handleHome(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte(html))
+	if err != nil {
+		return
+	}
+}
+
+func (s *Service) handlePlay(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	_, err := w.Write([]byte(playPageTemplate))
 	if err != nil {
 		return
 	}
