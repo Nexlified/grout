@@ -95,20 +95,52 @@
             font-size: 0.85rem;
             color: #d63384;
             word-wrap: break-word;
+            word-break: break-all;
             margin-top: 10px;
             border: 1px solid #dee2e6;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s;
+        }
+        .example-card code:hover {
+            background: #f8f9fa;
+        }
+        .example-card code:active {
+            background: #e9ecef;
+        }
+        .copy-feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+        .copy-feedback.show {
+            opacity: 1;
+            transform: translateY(0);
         }
         .params-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
             background: white;
+            display: block;
+            overflow-x: auto;
         }
         .params-table th,
         .params-table td {
             padding: 12px;
             text-align: left;
             border: 1px solid #dee2e6;
+            min-width: 100px;
         }
         .params-table th {
             background: #667eea;
@@ -148,9 +180,90 @@
             vertical-align: middle;
             margin-right: 8px;
         }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            header {
+                padding: 30px 20px;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            header p {
+                font-size: 1rem;
+            }
+            .content {
+                padding: 20px;
+            }
+            .section {
+                margin-bottom: 30px;
+            }
+            .section h2 {
+                font-size: 1.5rem;
+            }
+            .examples {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .example-card {
+                padding: 15px;
+            }
+            .example-card code {
+                font-size: 0.75rem;
+                padding: 8px;
+            }
+            .params-table th,
+            .params-table td {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+            footer {
+                padding: 20px;
+            }
+            .github-link {
+                font-size: 1rem;
+            }
+            .copy-feedback {
+                right: 10px;
+                top: 10px;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+            header p {
+                font-size: 0.9rem;
+            }
+            .section h2 {
+                font-size: 1.3rem;
+            }
+            .section p, .section li {
+                font-size: 0.95rem;
+            }
+            .example-card code {
+                font-size: 0.7rem;
+                padding: 6px;
+            }
+            .params-table {
+                font-size: 0.85rem;
+            }
+            .params-table th,
+            .params-table td {
+                padding: 6px;
+                min-width: 80px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="copy-feedback" id="copyFeedback">Link copied to clipboard!</div>
     <div class="container">
         <header>
             <h1>🎨 Grout</h1>
@@ -341,5 +454,67 @@
             </p>
         </footer>
     </div>
+
+    <script>
+        // Add click-to-copy functionality for all code blocks in example cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeBlocks = document.querySelectorAll('.example-card code');
+            const feedback = document.getElementById('copyFeedback');
+            
+            codeBlocks.forEach(function(codeBlock) {
+                codeBlock.addEventListener('click', function() {
+                    const text = codeBlock.textContent;
+                    
+                    // Copy to clipboard using modern API with fallback
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(function() {
+                            showCopyFeedback();
+                        }).catch(function() {
+                            fallbackCopy(text);
+                        });
+                    } else {
+                        fallbackCopy(text);
+                    }
+                });
+                
+                // Add touch feedback for mobile
+                codeBlock.addEventListener('touchstart', function() {
+                    codeBlock.style.background = '#e9ecef';
+                });
+                
+                codeBlock.addEventListener('touchend', function() {
+                    setTimeout(function() {
+                        codeBlock.style.background = '';
+                    }, 150);
+                });
+            });
+            
+            function showCopyFeedback() {
+                feedback.classList.add('show');
+                setTimeout(function() {
+                    feedback.classList.remove('show');
+                }, 2000);
+            }
+            
+            function fallbackCopy(text) {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    showCopyFeedback();
+                } catch (err) {
+                    console.error('Failed to copy text:', err);
+                }
+                
+                document.body.removeChild(textarea);
+            }
+        });
+    </script>
 </body>
 </html>
