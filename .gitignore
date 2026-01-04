@@ -1,6 +1,6 @@
 # Ignore build artifacts
 grout-*
-grout
+/grout
 avata-go-*
 avata-go
 *.exe
