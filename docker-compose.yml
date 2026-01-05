@@ -8,5 +8,8 @@ services:
     environment:
       ADDR: ":8080"
       CACHE_SIZE: "2000"
+      STATIC_DIR: "/app/static"
+    volumes:
+      - ./static:/app/static
     restart: unless-stopped
 

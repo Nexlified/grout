@@ -27,12 +27,16 @@ WORKDIR /app
 # Copy binary from builder
 COPY --from=builder /build/grout .
 
+# Create static directory for user-customizable files
+RUN mkdir -p /app/static
+
 # Expose port
 EXPOSE 8080
 
 # Set default environment variables
 ENV ADDR=":8080"
 ENV CACHE_SIZE="2000"
+ENV STATIC_DIR="/app/static"
 
 # Run the application
 CMD ["./grout"]

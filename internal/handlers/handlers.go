@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -33,10 +35,10 @@ var error5xxTemplate string
 var faviconData []byte
 
 //go:embed web/robots.txt
-var robotsTxtTemplate string
+var fallbackRobotsTxt string
 
 //go:embed web/sitemap.xml
-var sitemapXmlTemplate string
+var fallbackSitemapXml string
 
 // Service bundles dependencies required by HTTP handlers.
 type Service struct {
@@ -348,8 +350,11 @@ func (s *Service) handle404(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Service) handleRobotsTxt(w http.ResponseWriter, r *http.Request) {
+	// Try to read from static directory first
+	content := s.readStaticFile("robots.txt", fallbackRobotsTxt)
+
 	// Replace {{DOMAIN}} placeholder with actual configured domain
-	content := strings.ReplaceAll(robotsTxtTemplate, "{{DOMAIN}}", s.cfg.Domain)
+	content = strings.ReplaceAll(content, "{{DOMAIN}}", s.cfg.Domain)
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("Cache-Control", "public, max-age=86400")
@@ -361,8 +366,11 @@ func (s *Service) handleRobotsTxt(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Service) handleSitemapXml(w http.ResponseWriter, r *http.Request) {
+	// Try to read from static directory first
+	content := s.readStaticFile("sitemap.xml", fallbackSitemapXml)
+
 	// Replace {{DOMAIN}} placeholder with actual configured domain
-	content := strings.ReplaceAll(sitemapXmlTemplate, "{{DOMAIN}}", s.cfg.Domain)
+	content = strings.ReplaceAll(content, "{{DOMAIN}}", s.cfg.Domain)
 
 	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	w.Header().Set("Cache-Control", "public, max-age=86400")
@@ -371,4 +379,18 @@ func (s *Service) handleSitemapXml(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+}
+
+// readStaticFile attempts to read a file from the static directory.
+// If the file doesn't exist or can't be read, it returns the fallback content.
+func (s *Service) readStaticFile(filename string, fallback string) string {
+	filePath := filepath.Join(s.cfg.StaticDir, filename)
+	
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		// File doesn't exist or can't be read, use fallback
+		return fallback
+	}
+	
+	return string(data)
 }

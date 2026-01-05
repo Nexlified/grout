@@ -22,3 +22,8 @@ avata-go
 .DS_Store
 Thumbs.db
 
+# Static files directory (user-customizable)
+# Keep README.md to document the directory, but ignore actual static files
+/static/*
+!/static/README.md
+

@@ -14,6 +14,7 @@ const (
 	DefaultAvatarFg           = "8b5d5d"
 	DefaultAddr               = ":8080"
 	DefaultDomain             = "localhost:8080"
+	DefaultStaticDir          = "./static"
 	CacheSize                 = 2000
 	MinWidthForQuoteJoke      = 300 // Minimum width required to render quotes/jokes
 	MinFontSize               = 16  // Minimum font size for readability
@@ -28,18 +29,20 @@ const (
 type ServerConfig struct {
 	Addr      string
 	Domain    string
+	StaticDir string
 	CacheSize int
 }
 
 var (
 	addrFlag      = flag.String("addr", "", "HTTP listen address (env ADDR)")
 	domainFlag    = flag.String("domain", "", "Public domain for example URLs (env DOMAIN)")
+	staticDirFlag = flag.String("static-dir", "", "Directory for static files (env STATIC_DIR)")
 	cacheSizeFlag = flag.Int("cache-size", 0, "LRU cache size (env CACHE_SIZE)")
 )
 
 // DefaultServerConfig returns sane defaults for local development.
 func DefaultServerConfig() ServerConfig {
-	return ServerConfig{Addr: DefaultAddr, Domain: DefaultDomain, CacheSize: CacheSize}
+	return ServerConfig{Addr: DefaultAddr, Domain: DefaultDomain, StaticDir: DefaultStaticDir, CacheSize: CacheSize}
 }
 
 // LoadServerConfig reads defaults, then env, then flags.
@@ -51,6 +54,9 @@ func LoadServerConfig() ServerConfig {
 	}
 	if domain := os.Getenv("DOMAIN"); domain != "" {
 		cfg.Domain = domain
+	}
+	if staticDir := os.Getenv("STATIC_DIR"); staticDir != "" {
+		cfg.StaticDir = staticDir
 	}
 	if cacheEnv := os.Getenv("CACHE_SIZE"); cacheEnv != "" {
 		if n, err := strconv.Atoi(cacheEnv); err == nil && n > 0 {
@@ -67,6 +73,9 @@ func LoadServerConfig() ServerConfig {
 	}
 	if domainFlag != nil && *domainFlag != "" {
 		cfg.Domain = *domainFlag
+	}
+	if staticDirFlag != nil && *staticDirFlag != "" {
+		cfg.StaticDir = *staticDirFlag
 	}
 	if cacheSizeFlag != nil && *cacheSizeFlag > 0 {
 		cfg.CacheSize = *cacheSizeFlag
