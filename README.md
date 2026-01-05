@@ -146,6 +146,7 @@ If generation fails (for example due to invalid parameters), the server responds
 - `ADDR` env var or `-addr` flag controls the HTTP bind address (default `:8080`).
 - `CACHE_SIZE` env var or `-cache-size` flag sets LRU entry count (default `2000`).
 - `DOMAIN` env var or `-domain` flag sets the public domain for example URLs in the home page (default `localhost:8080`).
+- `STATIC_DIR` env var or `-static-dir` flag sets the directory for static files like `robots.txt` and `sitemap.xml` (default `./static`).
 
 ### Docker Configuration
 
@@ -156,7 +157,31 @@ environment:
   ADDR: ":3000"
   CACHE_SIZE: "5000"
   DOMAIN: "grout.example.com"
+  STATIC_DIR: "/app/static"
 ```
+
+### Static Files
+
+The application serves static files (like `robots.txt` and `sitemap.xml`) from the configured `STATIC_DIR` directory. If files are not found in this directory, the application falls back to embedded default versions.
+
+To customize static files:
+
+1. Create a `static` directory (or use the default location)
+2. Add your customized `robots.txt` and/or `sitemap.xml` files
+3. These files support the `{{DOMAIN}}` placeholder, which will be replaced with the configured domain
+
+**Docker Deployment:**
+
+For persistent static files in Docker, mount a volume:
+
+```yaml
+services:
+  grout:
+    volumes:
+      - ./static:/app/static
+```
+
+This ensures your customizations persist across container restarts and updates. The embedded files serve as fallbacks if custom files are not provided.
 
 ## Building from Source
 
