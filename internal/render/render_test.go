@@ -153,12 +153,12 @@ func TestDrawPlaceholderImageWithQuote(t *testing.T) {
 	}
 
 	tests := []struct {
-		name           string
-		width          int
-		height         int
-		text           string
-		isQuoteOrJoke  bool
-		format         ImageFormat
+		name          string
+		width         int
+		height        int
+		text          string
+		isQuoteOrJoke bool
+		format        ImageFormat
 	}{
 		{"Short quote PNG", 800, 400, "The only way to do great work is to love what you do.", true, FormatPNG},
 		{"Long quote PNG", 1000, 600, "Success is not final, failure is not fatal: It is the courage to continue that counts. Success is not final, failure is not fatal.", true, FormatPNG},
@@ -182,12 +182,12 @@ func TestDrawPlaceholderImageWithQuote(t *testing.T) {
 
 func TestWrapTextForSVG(t *testing.T) {
 	tests := []struct {
-		name       string
-		text       string
-		width      float64
-		fontSize   float64
-		minLines   int
-		maxLines   int
+		name     string
+		text     string
+		width    float64
+		fontSize float64
+		minLines int
+		maxLines int
 	}{
 		{"Short text", "Hello World", 800, 24, 1, 1},
 		{"Long text wraps", "The only way to do great work is to love what you do. Stay hungry, stay foolish.", 600, 24, 2, 5},

@@ -559,9 +559,9 @@ func TestPlaceholderHandlerMinimumWidthForQuotes(t *testing.T) {
 	svc.RegisterRoutes(mux)
 
 	tests := []struct {
-		name          string
-		path          string
-		expectQuote   bool
+		name        string
+		path        string
+		expectQuote bool
 	}{
 		{"Quote with sufficient width", "/placeholder/800x400?quote=true", true},
 		{"Quote with minimum width", "/placeholder/300x400?quote=true", true},

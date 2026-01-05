@@ -80,12 +80,12 @@ func (r *Renderer) DrawImage(w, h int, bgHex, fgHex, text string, rounded, bold 
 func (r *Renderer) DrawPlaceholderImage(w, h int, bgHex, fgHex, text string, isQuoteOrJoke bool, format ImageFormat) ([]byte, error) {
 	// Calculate font size based on whether it's a quote/joke or regular placeholder
 	var fontSize float64
-	
+
 	if isQuoteOrJoke {
 		// For quotes/jokes, use dynamic sizing based on text length and image dimensions
 		// Start with a base size relative to height
 		fontSize = float64(h) * 0.08
-		
+
 		// Adjust based on text length
 		textLen := len(text)
 		if textLen > 200 {
@@ -93,7 +93,7 @@ func (r *Renderer) DrawPlaceholderImage(w, h int, bgHex, fgHex, text string, isQ
 		} else if textLen > 100 {
 			fontSize = float64(h) * 0.06
 		}
-		
+
 		// Apply min/max bounds from config
 		if fontSize < config.MinFontSize {
 			fontSize = config.MinFontSize
@@ -206,15 +206,15 @@ func (r *Renderer) wrapText(dc *gg.Context, text string, imageWidth, fontSize fl
 	// Calculate available width with padding (10% on each side = 80% usable)
 	padding := imageWidth * 0.1
 	maxWidth := imageWidth - (2 * padding)
-	
+
 	words := strings.Fields(text)
 	if len(words) == 0 {
 		return []string{text}
 	}
-	
+
 	var lines []string
 	var currentLine string
-	
+
 	for _, word := range words {
 		testLine := currentLine
 		if testLine != "" {
@@ -222,10 +222,10 @@ func (r *Renderer) wrapText(dc *gg.Context, text string, imageWidth, fontSize fl
 		} else {
 			testLine = word
 		}
-		
+
 		// Measure the width of the test line
 		width, _ := dc.MeasureString(testLine)
-		
+
 		if width <= maxWidth {
 			currentLine = testLine
 		} else {
@@ -240,16 +240,16 @@ func (r *Renderer) wrapText(dc *gg.Context, text string, imageWidth, fontSize fl
 			}
 		}
 	}
-	
+
 	// Add the last line after processing all words
 	if currentLine != "" {
 		lines = append(lines, currentLine)
 	}
-	
+
 	if len(lines) == 0 {
 		return []string{text}
 	}
-	
+
 	return lines
 }
 
@@ -257,10 +257,10 @@ func (r *Renderer) wrapText(dc *gg.Context, text string, imageWidth, fontSize fl
 func drawMultiLineText(dc *gg.Context, lines []string, width, height, fontSize float64) {
 	lineHeight := fontSize * 1.5 // 1.5x line spacing for readability
 	totalHeight := float64(len(lines)) * lineHeight
-	
+
 	// Calculate starting Y position to center the text block vertically
-	startY := (height - totalHeight) / 2 + lineHeight/2
-	
+	startY := (height-totalHeight)/2 + lineHeight/2
+
 	// Draw each line centered horizontally
 	for i, line := range lines {
 		y := startY + float64(i)*lineHeight
@@ -356,7 +356,7 @@ func (r *Renderer) generateSVGWithWrapping(w, h int, bgHex, fgHex, text string, 
 		lines := wrapTextForSVG(text, float64(w), fontSize)
 		lineHeight := fontSize * 1.5
 		totalHeight := float64(len(lines)) * lineHeight
-		startY := (float64(h) - totalHeight) / 2 + lineHeight/2
+		startY := (float64(h)-totalHeight)/2 + lineHeight/2
 
 		for i, line := range lines {
 			y := startY + float64(i)*lineHeight
@@ -384,19 +384,19 @@ func wrapTextForSVG(text string, imageWidth, fontSize float64) []string {
 	padding := imageWidth * 0.1
 	maxWidth := imageWidth - (2 * padding)
 	maxCharsPerLine := int(maxWidth / charWidth)
-	
+
 	if maxCharsPerLine < config.MinCharsPerLine {
 		maxCharsPerLine = config.MinCharsPerLine
 	}
-	
+
 	words := strings.Fields(text)
 	if len(words) == 0 {
 		return []string{text}
 	}
-	
+
 	var lines []string
 	var currentLine string
-	
+
 	for _, word := range words {
 		testLine := currentLine
 		if testLine != "" {
@@ -404,7 +404,7 @@ func wrapTextForSVG(text string, imageWidth, fontSize float64) []string {
 		} else {
 			testLine = word
 		}
-		
+
 		if len(testLine) <= maxCharsPerLine {
 			currentLine = testLine
 		} else {
@@ -418,15 +418,15 @@ func wrapTextForSVG(text string, imageWidth, fontSize float64) []string {
 			}
 		}
 	}
-	
+
 	if currentLine != "" {
 		lines = append(lines, currentLine)
 	}
-	
+
 	if len(lines) == 0 {
 		return []string{text}
 	}
-	
+
 	return lines
 }
 
