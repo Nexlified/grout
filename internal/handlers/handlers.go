@@ -383,10 +383,37 @@ func (s *Service) handleSitemapXml(w http.ResponseWriter, r *http.Request) {
 
 // readStaticFile attempts to read a file from the static directory.
 // If the file doesn't exist or can't be read, it returns the fallback content.
+// The function validates that the resolved path is within the static directory to prevent directory traversal attacks.
 func (s *Service) readStaticFile(filename string, fallback string) string {
-	filePath := filepath.Join(s.cfg.StaticDir, filename)
+	// Clean the filename to prevent directory traversal
+	cleanFilename := filepath.Clean(filename)
 	
-	data, err := os.ReadFile(filePath)
+	// Prevent directory traversal by ensuring the filename doesn't start with .. or /
+	if strings.HasPrefix(cleanFilename, "..") || strings.HasPrefix(cleanFilename, "/") {
+		return fallback
+	}
+	
+	// Construct the full path
+	filePath := filepath.Join(s.cfg.StaticDir, cleanFilename)
+	
+	// Resolve absolute paths and verify the file is within the static directory
+	absStaticDir, err := filepath.Abs(s.cfg.StaticDir)
+	if err != nil {
+		return fallback
+	}
+	
+	absFilePath, err := filepath.Abs(filePath)
+	if err != nil {
+		return fallback
+	}
+	
+	// Ensure the resolved path is within the static directory
+	if !strings.HasPrefix(absFilePath, absStaticDir+string(filepath.Separator)) &&
+		absFilePath != absStaticDir {
+		return fallback
+	}
+	
+	data, err := os.ReadFile(absFilePath)
 	if err != nil {
 		// File doesn't exist or can't be read, use fallback
 		return fallback
