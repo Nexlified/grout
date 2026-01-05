@@ -256,11 +256,14 @@ func (r *Renderer) wrapText(dc *gg.Context, text string, imageWidth, fontSize fl
 // drawMultiLineText draws multiple lines of text centered on the image
 func drawMultiLineText(dc *gg.Context, lines []string, width, height, fontSize float64) {
 	lineHeight := fontSize * 1.5 // 1.5x line spacing for readability
-	totalHeight := float64(len(lines)) * lineHeight
+
+	// The actual text block height is one font-sized line plus spacing between lines.
+	// This avoids counting extra leading above the first line and below the last line.
+	totalHeight := fontSize + float64(len(lines)-1)*lineHeight
 
 	// Calculate starting Y position to center the text block vertically
-	startY := (height-totalHeight)/2 + lineHeight/2
-
+	// Use fontSize/2 to align the first line to the actual text height, not the line spacing.
+	startY := (height-totalHeight)/2 + fontSize/2
 	// Draw each line centered horizontally
 	for i, line := range lines {
 		y := startY + float64(i)*lineHeight
