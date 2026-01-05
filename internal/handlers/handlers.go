@@ -220,7 +220,7 @@ func (s *Service) handlePlaceholder(w http.ResponseWriter, r *http.Request) {
 		fgHex = render.GetContrastColor(bgHex)
 	}
 
-	key := fmt.Sprintf("PH:%d:%d:%s:%s:%s:%s:%t", width, height, bgHex, fgHex, text, format, isQuoteOrJoke)
+	key := fmt.Sprintf("PH:%d:%d:%s:%s:%s:%s", width, height, bgHex, fgHex, text, format)
 	s.serveImage(w, r, key, format, func() ([]byte, error) {
 		return s.renderer.DrawPlaceholderImage(width, height, bgHex, fgHex, text, isQuoteOrJoke, format)
 	})
