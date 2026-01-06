@@ -227,3 +227,22 @@ To enable Codecov integration (optional):
 - Consider fronting the service with a CDN when deploying to production so the long-lived cache headers are effective.
 - Run tests with `go test ./...`
 
+## Documentation
+
+For more information about the project:
+
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Guidelines for contributing to the project
+- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community standards and expectations
+- **[SECURITY.md](SECURITY.md)** - Security policy and vulnerability reporting
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Technical architecture and design decisions
+- **[CHANGELOG.md](CHANGELOG.md)** - Project changelog and version history
+- **[LICENSE](LICENSE)** - MIT License for open-source commercial use
+
+## Contributing
+
+We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
