@@ -388,8 +388,8 @@ func (s *Service) readStaticFile(filename string, fallback string) string {
 	// Clean the filename to prevent directory traversal
 	cleanFilename := filepath.Clean(filename)
 
-	// Prevent directory traversal by ensuring the filename doesn't start with .. or /
-	if strings.HasPrefix(cleanFilename, "..") || strings.HasPrefix(cleanFilename, "/") {
+	// Prevent directory traversal by rejecting paths that start with ".." or are absolute
+	if strings.HasPrefix(cleanFilename, "..") || filepath.IsAbs(cleanFilename) {
 		return fallback
 	}
 
