@@ -265,6 +265,102 @@
             margin-right: 8px;
         }
 
+        /* New SEO sections styling */
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        .use-case-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .use-case-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        .use-case-item h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        .use-case-item p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        .feature-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+        .feature-item h4 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+        .feature-item p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .integration-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .code-example {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #4a5568;
+            transition: border-color 0.2s;
+        }
+        .code-example:hover {
+            border-color: #667eea;
+        }
+        .code-example h4 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .code-example pre {
+            margin: 0;
+            overflow-x: auto;
+        }
+        .code-example code {
+            background: transparent;
+            color: #e2e8f0;
+            padding: 0;
+            border: none;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            display: block;
+            white-space: pre;
+        }
+
         /* Responsive styles */
         @media (max-width: 768px) {
             body {
@@ -315,6 +411,21 @@
                 top: 10px;
                 padding: 10px 15px;
                 font-size: 0.9rem;
+            }
+            .use-cases-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .integration-examples {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .code-example {
+                padding: 15px;
+            }
+            .code-example code {
+                font-size: 0.75rem;
             }
         }
 
@@ -527,6 +638,132 @@
                         </tr>
                     </tbody>
                 </table>
+            </section>
+
+            <section class="section">
+                <h2>Why Choose Grout for Image Generation?</h2>
+                <p>Grout is a powerful, open-source image generation service designed for modern web developers who need reliable avatar and placeholder image solutions. Whether you're building a social platform, e-commerce site, or web application, Grout provides enterprise-grade image generation capabilities with zero configuration required.</p>
+                
+                <h3 style="color: #667eea; font-size: 1.4rem; margin-top: 30px; margin-bottom: 15px;">Perfect for Multiple Use Cases</h3>
+                <div class="use-cases-grid">
+                    <div class="use-case-item">
+                        <h4>Web Applications</h4>
+                        <p>Generate dynamic user avatars for profile pictures, comment sections, and user directories. Our avatar generator automatically creates beautiful initials-based images for any user name.</p>
+                    </div>
+                    <div class="use-case-item">
+                        <h4>Design & Prototyping</h4>
+                        <p>Create placeholder images for mockups, wireframes, and design systems. Perfect for designers and developers who need quick placeholder graphics with custom dimensions and text.</p>
+                    </div>
+                    <div class="use-case-item">
+                        <h4>E-commerce Platforms</h4>
+                        <p>Display temporary product images while loading or when images are unavailable. Generate consistent placeholder images that match your brand colors and maintain user experience.</p>
+                    </div>
+                    <div class="use-case-item">
+                        <h4>Content Management Systems</h4>
+                        <p>Automatically generate author avatars, default post images, and media placeholders. Integrate seamlessly with WordPress, Drupal, or custom CMS solutions via REST API.</p>
+                    </div>
+                    <div class="use-case-item">
+                        <h4>Social Media Integration</h4>
+                        <p>Create profile pictures for social login, user badges, and community features. Support for circular avatars perfect for social media platforms and messaging apps.</p>
+                    </div>
+                    <div class="use-case-item">
+                        <h4>Mobile Applications</h4>
+                        <p>Lightweight API for generating images in mobile apps (iOS, Android, React Native). WebP format support ensures optimal performance for mobile networks.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Technical Features & Benefits</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <h4>⚡ High Performance</h4>
+                        <p>Built with Go for blazing-fast image generation. In-memory LRU caching ensures sub-millisecond response times for cached images. Perfect for high-traffic websites and applications.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🎨 Multiple Image Formats</h4>
+                        <p>Native support for WebP, PNG, JPG, GIF, and SVG formats. Choose the best format for your use case - WebP for modern browsers, PNG for transparency, JPG for photos, SVG for scalability.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🔧 Simple REST API</h4>
+                        <p>Easy-to-use RESTful API with intuitive URL parameters. No authentication required, no API keys, no rate limits. Just simple HTTP GET requests to generate images on-demand.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🎯 Customizable Design</h4>
+                        <p>Full control over colors, sizes, shapes, and text. Support for gradient backgrounds, custom fonts (bold/regular), circular or square avatars, and auto-contrast text colors.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>📦 Self-Hosted Solution</h4>
+                        <p>Deploy on your own infrastructure for complete data privacy and control. Docker support makes deployment easy on any platform - AWS, Google Cloud, Azure, or on-premises.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🚀 CDN-Ready</h4>
+                        <p>Immutable cache headers and ETag support optimize CDN caching. Deploy behind Cloudflare, AWS CloudFront, or Fastly for global edge caching and ultra-fast delivery.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Easy Integration for Developers</h2>
+                <p>Grout integrates seamlessly with any web technology stack. Whether you're using React, Vue, Angular, vanilla JavaScript, or server-side frameworks like Django, Rails, Laravel, or Express.js, Grout works out of the box.</p>
+                
+                <h3 style="color: #667eea; font-size: 1.4rem; margin-top: 25px; margin-bottom: 15px;">Quick Integration Examples</h3>
+                
+                <div class="integration-examples">
+                    <div class="code-example">
+                        <h4>HTML / Vanilla JavaScript</h4>
+                        <pre><code>&lt;img src="https://{{DOMAIN}}/avatar/John+Doe.webp?size=200&rounded=true" 
+     alt="User Avatar"&gt;</code></pre>
+                    </div>
+                    
+                    <div class="code-example">
+                        <h4>React / Next.js</h4>
+                        <pre><code>const Avatar = ({ name, size = 128 }) =&gt; (
+  &lt;img 
+    src={`https://{{DOMAIN}}/avatar/${name}.webp?size=${size}&rounded=true`}
+    alt={`${name} avatar`}
+  /&gt;
+);</code></pre>
+                    </div>
+                    
+                    <div class="code-example">
+                        <h4>Vue.js</h4>
+                        <pre><code>&lt;template&gt;
+  &lt;img :src="avatarUrl" :alt="`${name} avatar`"&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  computed: {
+    avatarUrl() {
+      return `https://{{DOMAIN}}/avatar/${this.name}.webp?size=150&rounded=true`;
+    }
+  }
+};
+&lt;/script&gt;</code></pre>
+                    </div>
+                    
+                    <div class="code-example">
+                        <h4>Python / Django</h4>
+                        <pre><code># In your template
+&lt;img src="https://{{DOMAIN}}/avatar/{{ user.name }}.webp?size=128&rounded=true" 
+     alt="User avatar"&gt;
+
+# Or generate URL in views
+avatar_url = f"https://{{DOMAIN}}/avatar/{user.name}.webp?size=128&rounded=true"</code></pre>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 25px;">Need more integration examples? Check out our <a href="https://github.com/Nexlified/grout" target="_blank" style="color: #667eea; text-decoration: underline;">GitHub repository</a> for comprehensive documentation, code samples, and community contributions.</p>
+            </section>
+
+            <section class="section" style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-bottom: 0;">
+                <h2>Free, Open Source, and Production-Ready</h2>
+                <p>Grout is completely free to use and licensed under MIT. Whether you're a hobbyist building a side project or an enterprise deploying at scale, Grout provides professional-grade image generation without licensing costs or vendor lock-in.</p>
+                
+                <div style="margin-top: 20px;">
+                    <p><strong>Keywords:</strong> avatar generator API, placeholder image service, dynamic image generation, user avatar API, initials avatar creator, REST API image service, webp image generator, PNG avatar generator, profile picture generator, free image API, self-hosted image service, Go image service, Docker image generator, CDN-ready images, developer tools, open source avatar generator, HTTP image API</p>
+                </div>
             </section>
         </main>
 
