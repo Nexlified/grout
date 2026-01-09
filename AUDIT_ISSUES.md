@@ -37,6 +37,11 @@ The HTTP server has no timeouts configured, making it vulnerable to slowloris at
 **Proposed Solution:**
 Configure server timeouts in main.go:
 ```go
+import (
+    "time"
+    "net/http"
+)
+
 srv := &http.Server{
     Addr:         cfg.Addr,
     Handler:      mux,

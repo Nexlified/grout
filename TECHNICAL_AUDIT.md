@@ -47,12 +47,14 @@ Grout is a well-architected, high-performance HTTP service for generating avatar
 
 **Issue:** No validation of configuration values at startup.
 
-**Current Code:**
+**Current Code (simplified):**
 ```go
-// internal/config/config.go
+// internal/config/config.go (lines 49-85, simplified for illustration)
 func LoadServerConfig() ServerConfig {
     cfg := DefaultServerConfig()
     // ... loads from env/flags
+    flag.Parse()
+    // ... applies flag overrides
     return cfg // No validation!
 }
 ```
@@ -149,13 +151,15 @@ const (
 
 **Implementation:**
 ```go
-// Use standard middleware or add custom
+// Option 1: Add dependency github.com/NYTimes/gziphandler
 import "github.com/NYTimes/gziphandler"
 
 mux := http.NewServeMux()
 svc.RegisterRoutes(mux)
 handler := gziphandler.GzipHandler(mux)
-http.ListenAndServe(cfg.Addr, handler)
+log.Fatal(http.ListenAndServe(cfg.Addr, handler))
+
+// Option 2: Use standard library compress/gzip (more code but no dependency)
 ```
 
 **Estimated Savings:** 70-80% bandwidth for SVG, 20-30% for PNG
@@ -255,7 +259,7 @@ dc.SetFontFace(truetype.NewFace(font, &truetype.Options{Size: fontSize}))
 
 **Recommendation:**
 ```go
-// Use golang.org/x/time/rate
+// Add dependency: go get golang.org/x/time/rate
 import "golang.org/x/time/rate"
 
 type rateLimitedHandler struct {
@@ -510,7 +514,9 @@ func TestConcurrentRequests(t *testing.T) {
 
 **Recommendation:**
 ```go
-// Add Prometheus metrics
+// Add dependencies:
+// - github.com/prometheus/client_golang/prometheus
+// - github.com/prometheus/client_golang/prometheus/promhttp
 import "github.com/prometheus/client_golang/prometheus"
 
 var (
@@ -903,12 +909,12 @@ func ParseRequest(r *http.Request) RequestParams {
 
 ### Current Dependencies (Excellent)
 ```
-github.com/chai2010/webp v1.4.0          ✅ Active, well-maintained
-github.com/fogleman/gg v1.3.0            ✅ Stable, popular
-github.com/golang/freetype v0.0.0-...    ⚠️  Old but stable
+github.com/chai2010/webp v1.4.0           ✅ Active, well-maintained
+github.com/fogleman/gg v1.3.0             ✅ Stable, popular
+github.com/golang/freetype v0.0.0-...     ⚠️ Old but stable
 github.com/hashicorp/golang-lru/v2 v2.0.7 ✅ Active, production-ready
-golang.org/x/image v0.34.0               ✅ Official Go extension
-gopkg.in/yaml.v3 v3.0.1                  ✅ Standard YAML library
+golang.org/x/image v0.34.0                ✅ Official Go extension
+gopkg.in/yaml.v3 v3.0.1                   ✅ Standard YAML library
 ```
 
 ### Recommendations

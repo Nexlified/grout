@@ -111,12 +111,12 @@
 ```
 Package                Coverage    Status
 ─────────────────────────────────────────
-internal/utils         100.0%      ✅
-internal/content        88.2%      ✅
-internal/render         84.8%      ✅
-internal/handlers       82.4%      ✅
-internal/config          0.0%      ⚠️ (no tests, simple config)
-cmd/grout                0.0%      ⚠️ (main.go, integration test needed)
+internal/utils          100%       ✅
+internal/content       88.2%       ✅
+internal/render        84.8%       ✅
+internal/handlers      82.4%       ✅
+internal/config          0%        ⚠️ (no tests, simple config)
+cmd/grout                0%        ⚠️ (main.go, integration test needed)
 ```
 
 ---
