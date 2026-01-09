@@ -799,12 +799,7 @@ func TestSecurityHeadersOn404ErrorPage(t *testing.T) {
 }
 
 func TestSecurityHeadersOn500ErrorPage(t *testing.T) {
-	renderer, err := render.New()
-	if err != nil {
-		t.Fatalf("renderer init: %v", err)
-	}
-	cache, _ := lru.New[string, []byte](1)
-	svc := NewService(renderer, cache, config.DefaultServerConfig())
+	svc, _ := setupTestService(t)
 
 	rec := httptest.NewRecorder()
 	svc.serveErrorPage(rec, http.StatusInternalServerError, "Test error")
