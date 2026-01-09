@@ -82,11 +82,12 @@ When deploying Grout, we recommend following these security best practices:
 
 ### Input Validation
 
-Grout includes built-in input validation, but you should also:
+Grout includes built-in input validation and security features:
 
-1. **Sanitize Inputs**: Validate and sanitize user inputs at the application layer
-2. **Size Limits**: Set reasonable limits for image dimensions at the reverse proxy
-3. **Content Security**: Implement Content Security Policy (CSP) headers
+1. **Security Headers**: All HTML responses include security headers (CSP, X-Content-Type-Options, X-Frame-Options, X-XSS-Protection)
+2. **Sanitize Inputs**: Validate and sanitize user inputs at the application layer
+3. **Size Limits**: Set reasonable limits for image dimensions at the reverse proxy
+4. **Content Security**: Built-in Content Security Policy (CSP) headers for HTML endpoints
 
 ### Monitoring and Logging
 
