@@ -238,6 +238,15 @@ For more information about the project:
 - **[CHANGELOG.md](CHANGELOG.md)** - Project changelog and version history
 - **[LICENSE](LICENSE)** - MIT License for open-source commercial use
 
+### Technical Review & Audit
+
+Comprehensive technical review completed January 2026:
+
+- **[TECHNICAL_REVIEW_SUMMARY.md](TECHNICAL_REVIEW_SUMMARY.md)** - Executive summary and key findings
+- **[TECHNICAL_AUDIT.md](TECHNICAL_AUDIT.md)** - Full technical audit report (1,000+ lines)
+- **[AUDIT_ISSUES.md](AUDIT_ISSUES.md)** - 24 actionable improvement recommendations
+- **[ISSUE_CREATION_GUIDE.md](ISSUE_CREATION_GUIDE.md)** - Guide for creating GitHub issues from audit findings
+
 ## Contributing
 
 We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting pull requests.
