@@ -85,12 +85,12 @@ func TestIntegrationMain(t *testing.T) {
 
 func testAvatarIntegration(t *testing.T, client *http.Client, baseURL string) {
 	tests := []struct {
-		name            string
-		url             string
-		expectedStatus  int
-		expectedCT      string
-		checkBody       bool
-		checkHeaders    []string
+		name           string
+		url            string
+		expectedStatus int
+		expectedCT     string
+		checkBody      bool
+		checkHeaders   []string
 	}{
 		{
 			name:           "Default SVG avatar",
@@ -171,12 +171,12 @@ func testAvatarIntegration(t *testing.T, client *http.Client, baseURL string) {
 
 func testPlaceholderIntegration(t *testing.T, client *http.Client, baseURL string) {
 	tests := []struct {
-		name            string
-		url             string
-		expectedStatus  int
-		expectedCT      string
-		checkBody       bool
-		checkHeaders    []string
+		name           string
+		url            string
+		expectedStatus int
+		expectedCT     string
+		checkBody      bool
+		checkHeaders   []string
 	}{
 		{
 			name:           "Default placeholder SVG",
@@ -265,12 +265,12 @@ func testPlaceholderIntegration(t *testing.T, client *http.Client, baseURL strin
 
 func testStaticEndpointsIntegration(t *testing.T, client *http.Client, baseURL string) {
 	tests := []struct {
-		name            string
-		url             string
-		expectedStatus  int
-		expectedCT      string
-		checkBody       bool
-		bodyContains    []string
+		name           string
+		url            string
+		expectedStatus int
+		expectedCT     string
+		checkBody      bool
+		bodyContains   []string
 	}{
 		{
 			name:           "Home page",
@@ -407,7 +407,7 @@ func testErrorScenariosIntegration(t *testing.T, client *http.Client, baseURL st
 func testCachingBehaviorIntegration(t *testing.T, client *http.Client, baseURL string) {
 	// Make first request to avatar endpoint
 	url := baseURL + "/avatar/CacheTest.png?size=128"
-	
+
 	// First request - should not have X-Cache header
 	resp1, err := client.Get(url)
 	if err != nil {
@@ -426,7 +426,7 @@ func testCachingBehaviorIntegration(t *testing.T, client *http.Client, baseURL s
 
 	// First request might or might not have X-Cache depending on implementation
 	_ = resp1.Header.Get("X-Cache")
-	
+
 	// Read body to ensure request completes
 	io.ReadAll(resp1.Body)
 
