@@ -276,6 +276,14 @@ func (s *Service) serveImage(w http.ResponseWriter, r *http.Request, cacheKey st
 	_, _ = w.Write(imgData)
 }
 
+// setSecurityHeaders applies security headers to HTML responses
+func setSecurityHeaders(w http.ResponseWriter) {
+	w.Header().Set("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+	w.Header().Set("X-Frame-Options", "DENY")
+	w.Header().Set("X-XSS-Protection", "1; mode=block")
+}
+
 func (s *Service) HandleHealth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -297,6 +305,7 @@ func (s *Service) handleHome(w http.ResponseWriter, r *http.Request) {
 	// Replace {{DOMAIN}} placeholder with actual configured domain
 	html := strings.ReplaceAll(homePageTemplate, "{{DOMAIN}}", s.cfg.Domain)
 
+	setSecurityHeaders(w)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte(html))
@@ -309,6 +318,7 @@ func (s *Service) handlePlay(w http.ResponseWriter, r *http.Request) {
 	// Replace {{DOMAIN}} placeholder with actual configured domain
 	html := strings.ReplaceAll(playPageTemplate, "{{DOMAIN}}", s.cfg.Domain)
 
+	setSecurityHeaders(w)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, err := w.Write([]byte(html))
@@ -350,6 +360,7 @@ func (s *Service) serveErrorPage(w http.ResponseWriter, statusCode int, message 
 	html = strings.ReplaceAll(html, "{{STATUS_TEXT}}", statusText)
 	html = strings.ReplaceAll(html, "{{ERROR_MESSAGE}}", message)
 
+	setSecurityHeaders(w)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(statusCode)
 	_, err := w.Write([]byte(html))

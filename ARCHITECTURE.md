@@ -620,11 +620,20 @@ if !isValidHex(colorStr) {
 
 ### HTTP Security
 
-**Headers**: Appropriate security headers
+**Security Headers**: HTML responses include comprehensive security headers
 ```go
-w.Header().Set("X-Content-Type-Options", "nosniff")
-w.Header().Set("Content-Type", "image/png")
+Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
 ```
+
+These headers are automatically applied to:
+- Home page (`/`)
+- Play page (`/play`)
+- Error pages (4xx, 5xx)
+
+Image endpoints (`/avatar/`, `/placeholder/`) do not include these headers as they serve binary content.
 
 **No User Data**: Stateless, no user data stored
 - No cookies
