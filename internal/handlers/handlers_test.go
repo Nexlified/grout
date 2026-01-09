@@ -719,7 +719,18 @@ func TestRateLimitingIntegration(t *testing.T) {
 	}
 }
 
-func TestSecurityHeadersOnHomeEndpoint(t *testing.T) {
+// expectedSecurityHeaders returns the map of expected security headers
+func expectedSecurityHeaders() map[string]string {
+	return map[string]string{
+		"Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'",
+		"X-Content-Type-Options":  "nosniff",
+		"X-Frame-Options":         "DENY",
+		"X-XSS-Protection":        "1; mode=block",
+	}
+}
+
+// setupTestService creates a test service with renderer, cache, and mux
+func setupTestService(t *testing.T) (*Service, *http.ServeMux) {
 	renderer, err := render.New()
 	if err != nil {
 		t.Fatalf("renderer init: %v", err)
@@ -728,6 +739,22 @@ func TestSecurityHeadersOnHomeEndpoint(t *testing.T) {
 	svc := NewService(renderer, cache, config.DefaultServerConfig())
 	mux := http.NewServeMux()
 	svc.RegisterRoutes(mux, nil)
+	return svc, mux
+}
+
+// verifySecurityHeaders checks that all expected security headers are present
+func verifySecurityHeaders(t *testing.T, rec *httptest.ResponseRecorder) {
+	headers := expectedSecurityHeaders()
+	for header, expectedValue := range headers {
+		actualValue := rec.Header().Get(header)
+		if actualValue != expectedValue {
+			t.Errorf("expected %s header to be %q, got %q", header, expectedValue, actualValue)
+		}
+	}
+}
+
+func TestSecurityHeadersOnHomeEndpoint(t *testing.T) {
+	_, mux := setupTestService(t)
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
@@ -738,31 +765,11 @@ func TestSecurityHeadersOnHomeEndpoint(t *testing.T) {
 		t.Fatalf("expected 200 got %d", rec.Code)
 	}
 
-	// Verify security headers are present
-	headers := map[string]string{
-		"Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'",
-		"X-Content-Type-Options":  "nosniff",
-		"X-Frame-Options":         "DENY",
-		"X-XSS-Protection":        "1; mode=block",
-	}
-
-	for header, expectedValue := range headers {
-		actualValue := rec.Header().Get(header)
-		if actualValue != expectedValue {
-			t.Errorf("expected %s header to be %q, got %q", header, expectedValue, actualValue)
-		}
-	}
+	verifySecurityHeaders(t, rec)
 }
 
 func TestSecurityHeadersOnPlayEndpoint(t *testing.T) {
-	renderer, err := render.New()
-	if err != nil {
-		t.Fatalf("renderer init: %v", err)
-	}
-	cache, _ := lru.New[string, []byte](1)
-	svc := NewService(renderer, cache, config.DefaultServerConfig())
-	mux := http.NewServeMux()
-	svc.RegisterRoutes(mux, nil)
+	_, mux := setupTestService(t)
 
 	req := httptest.NewRequest(http.MethodGet, "/play", nil)
 	rec := httptest.NewRecorder()
@@ -773,31 +780,11 @@ func TestSecurityHeadersOnPlayEndpoint(t *testing.T) {
 		t.Fatalf("expected 200 got %d", rec.Code)
 	}
 
-	// Verify security headers are present
-	headers := map[string]string{
-		"Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'",
-		"X-Content-Type-Options":  "nosniff",
-		"X-Frame-Options":         "DENY",
-		"X-XSS-Protection":        "1; mode=block",
-	}
-
-	for header, expectedValue := range headers {
-		actualValue := rec.Header().Get(header)
-		if actualValue != expectedValue {
-			t.Errorf("expected %s header to be %q, got %q", header, expectedValue, actualValue)
-		}
-	}
+	verifySecurityHeaders(t, rec)
 }
 
 func TestSecurityHeadersOn404ErrorPage(t *testing.T) {
-	renderer, err := render.New()
-	if err != nil {
-		t.Fatalf("renderer init: %v", err)
-	}
-	cache, _ := lru.New[string, []byte](1)
-	svc := NewService(renderer, cache, config.DefaultServerConfig())
-	mux := http.NewServeMux()
-	svc.RegisterRoutes(mux, nil)
+	_, mux := setupTestService(t)
 
 	req := httptest.NewRequest(http.MethodGet, "/nonexistent", nil)
 	rec := httptest.NewRecorder()
@@ -808,20 +795,7 @@ func TestSecurityHeadersOn404ErrorPage(t *testing.T) {
 		t.Fatalf("expected 404 got %d", rec.Code)
 	}
 
-	// Verify security headers are present
-	headers := map[string]string{
-		"Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'",
-		"X-Content-Type-Options":  "nosniff",
-		"X-Frame-Options":         "DENY",
-		"X-XSS-Protection":        "1; mode=block",
-	}
-
-	for header, expectedValue := range headers {
-		actualValue := rec.Header().Get(header)
-		if actualValue != expectedValue {
-			t.Errorf("expected %s header to be %q, got %q", header, expectedValue, actualValue)
-		}
-	}
+	verifySecurityHeaders(t, rec)
 }
 
 func TestSecurityHeadersOn500ErrorPage(t *testing.T) {
@@ -839,31 +813,11 @@ func TestSecurityHeadersOn500ErrorPage(t *testing.T) {
 		t.Fatalf("expected 500 got %d", rec.Code)
 	}
 
-	// Verify security headers are present
-	headers := map[string]string{
-		"Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'",
-		"X-Content-Type-Options":  "nosniff",
-		"X-Frame-Options":         "DENY",
-		"X-XSS-Protection":        "1; mode=block",
-	}
-
-	for header, expectedValue := range headers {
-		actualValue := rec.Header().Get(header)
-		if actualValue != expectedValue {
-			t.Errorf("expected %s header to be %q, got %q", header, expectedValue, actualValue)
-		}
-	}
+	verifySecurityHeaders(t, rec)
 }
 
 func TestSecurityHeadersNotPresentOnImageEndpoints(t *testing.T) {
-	renderer, err := render.New()
-	if err != nil {
-		t.Fatalf("renderer init: %v", err)
-	}
-	cache, _ := lru.New[string, []byte](1)
-	svc := NewService(renderer, cache, config.DefaultServerConfig())
-	mux := http.NewServeMux()
-	svc.RegisterRoutes(mux, nil)
+	_, mux := setupTestService(t)
 
 	tests := []struct {
 		name string
