@@ -13,7 +13,9 @@ func TestRateLimiterAllow(t *testing.T) {
 
 	handler := rl.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		if _, err := w.Write([]byte("OK")); err != nil {
+			t.Errorf("failed to write response: %v", err)
+		}
 	}))
 
 	// First request should succeed
@@ -43,7 +45,9 @@ func TestRateLimiterExceeded(t *testing.T) {
 
 	handler := rl.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		if _, err := w.Write([]byte("OK")); err != nil {
+			t.Errorf("failed to write response: %v", err)
+		}
 	}))
 
 	// First request should succeed
@@ -73,7 +77,9 @@ func TestRateLimiterDifferentIPs(t *testing.T) {
 
 	handler := rl.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		if _, err := w.Write([]byte("OK")); err != nil {
+			t.Errorf("failed to write response: %v", err)
+		}
 	}))
 
 	// Request from IP 1
@@ -113,7 +119,9 @@ func TestRateLimiterXForwardedFor(t *testing.T) {
 
 	handler := rl.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		if _, err := w.Write([]byte("OK")); err != nil {
+			t.Errorf("failed to write response: %v", err)
+		}
 	}))
 
 	// First request with X-Forwarded-For header
@@ -145,7 +153,9 @@ func TestRateLimiterXForwardedForMultipleIPs(t *testing.T) {
 
 	handler := rl.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		if _, err := w.Write([]byte("OK")); err != nil {
+			t.Errorf("failed to write response: %v", err)
+		}
 	}))
 
 	// First request with X-Forwarded-For containing multiple IPs (client, proxy1, proxy2)
@@ -177,7 +187,9 @@ func TestRateLimiterXRealIP(t *testing.T) {
 
 	handler := rl.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		if _, err := w.Write([]byte("OK")); err != nil {
+			t.Errorf("failed to write response: %v", err)
+		}
 	}))
 
 	// First request with X-Real-IP header
@@ -209,7 +221,9 @@ func TestRateLimiterRecovery(t *testing.T) {
 
 	handler := rl.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
+		if _, err := w.Write([]byte("OK")); err != nil {
+			t.Errorf("failed to write response: %v", err)
+		}
 	}))
 
 	// First request should succeed
