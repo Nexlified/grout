@@ -28,7 +28,10 @@ func TestIntegrationMain(t *testing.T) {
 	if err != nil {
 		t.Fatalf("renderer init: %v", err)
 	}
-	cache, _ := lru.New[string, []byte](2000)
+	cache, err := lru.New[string, []byte](2000)
+	if err != nil {
+		t.Fatalf("cache init: %v", err)
+	}
 	cfg := config.DefaultServerConfig()
 	svc := NewService(renderer, cache, cfg)
 	mux := http.NewServeMux()
@@ -436,9 +439,6 @@ func testCachingBehaviorIntegration(t *testing.T, client *http.Client, baseURL s
 		t.Error("expected ETag header on first request")
 	}
 
-	// First request might or might not have X-Cache depending on implementation
-	_ = resp1.Header.Get("X-Cache")
-
 	// Read body to ensure request completes
 	_, _ = io.ReadAll(resp1.Body)
 
@@ -497,7 +497,10 @@ func BenchmarkIntegrationAvatarRequest(b *testing.B) {
 	if err != nil {
 		b.Fatalf("renderer init: %v", err)
 	}
-	cache, _ := lru.New[string, []byte](2000)
+	cache, err := lru.New[string, []byte](2000)
+	if err != nil {
+		b.Fatalf("cache init: %v", err)
+	}
 	cfg := config.DefaultServerConfig()
 	svc := NewService(renderer, cache, cfg)
 
