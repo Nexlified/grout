@@ -244,7 +244,32 @@ To enable Codecov integration (optional):
 - Customize the defaults by editing the constants in `internal/config/config.go`.
 - Extend `DrawImage` in `internal/render/render.go` if you need additional shapes, padding, or font scaling strategies.
 - Consider fronting the service with a CDN when deploying to production so the long-lived cache headers are effective.
-- Run tests with `go test ./...`
+
+### Running Tests
+
+The project includes comprehensive unit and integration tests:
+
+```bash
+# Run all tests (unit + integration)
+go test ./...
+
+# Run tests with race detection and coverage
+go test -race -coverprofile=coverage.out ./...
+
+# Run only unit tests (skip integration tests)
+go test -short ./...
+
+# Run only integration tests
+go test ./internal/handlers -run TestIntegration
+
+# Run tests with verbose output
+go test -v ./...
+
+# Run benchmarks
+go test -bench=. ./...
+```
+
+Integration tests start a real HTTP server and make actual HTTP requests to verify end-to-end functionality. They are fast enough for CI (complete in ~2 seconds) and can be skipped during development with the `-short` flag.
 
 ## Documentation
 
