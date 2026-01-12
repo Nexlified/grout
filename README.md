@@ -136,6 +136,7 @@ curl "http://localhost:8080/placeholder/1000x500?joke=true&bg=2c3e50&color=ecf0f
 - Images are served as SVG by default (when no extension is specified). The `Content-Type` header is set based on the requested format: `image/svg+xml`, `image/webp`, `image/png`, `image/jpeg`, or `image/gif`.
 - Successful responses include `Cache-Control: public, max-age=31536000, immutable` and an `ETag` keyed by the query parameters and format.
 - Cached entries are stored in an in-memory LRU (`CacheSize = 2000`) to reduce rendering overhead. Cache hits expose the header `X-Cache: HIT`.
+- **Compression**: Responses are automatically compressed using gzip or brotli based on the client's `Accept-Encoding` header. SVG and text-based responses benefit from 70-80% compression, while already-compressed formats (PNG, JPEG, GIF, WebP) are served uncompressed for optimal performance.
 
 ## Error Handling
 
@@ -243,8 +244,10 @@ To enable Codecov integration (optional):
 
 - Customize the defaults by editing the constants in `internal/config/config.go`.
 - Extend `DrawImage` in `internal/render/render.go` if you need additional shapes, padding, or font scaling strategies.
-- Consider fronting the service with a CDN when deploying to production so the long-lived cache headers are effective.
+- Consider fronting the service with a CDN when deploying to production so the long-lived cache headers and compression are most effective.
+- Compression is automatically enabled for SVG and text-based responses. The middleware prefers brotli over gzip when both are supported by the client.
 - Run tests with `go test ./...`
+- Run benchmarks with `go test -bench=. -benchmem ./internal/middleware/`
 
 ## Documentation
 
