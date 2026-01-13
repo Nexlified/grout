@@ -35,7 +35,7 @@ func TestIntegrationMain(t *testing.T) {
 	cfg := config.DefaultServerConfig()
 	svc := NewService(renderer, cache, cfg)
 	mux := http.NewServeMux()
-	svc.RegisterRoutes(mux)
+	svc.RegisterRoutes(mux, nil)
 
 	// Start a real HTTP server on a random available port
 	listener, err := net.Listen("tcp", "127.0.0.1:0")
@@ -506,7 +506,7 @@ func BenchmarkIntegrationAvatarRequest(b *testing.B) {
 
 	// Use httptest for benchmarking (faster than real HTTP server)
 	mux := http.NewServeMux()
-	svc.RegisterRoutes(mux)
+	svc.RegisterRoutes(mux, nil)
 	server := httptest.NewServer(mux)
 	defer server.Close()
 
