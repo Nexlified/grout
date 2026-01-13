@@ -249,6 +249,32 @@ To enable Codecov integration (optional):
 - Run tests with `go test ./...`
 - Run benchmarks with `go test -bench=. -benchmem ./internal/middleware/`
 
+### Running Tests
+
+The project includes comprehensive unit and integration tests:
+
+```bash
+# Run all tests (unit + integration)
+go test ./...
+
+# Run tests with race detection and coverage
+go test -race -coverprofile=coverage.out ./...
+
+# Run only unit tests (skip integration tests)
+go test -short ./...
+
+# Run only integration tests
+go test ./internal/handlers -run TestIntegration
+
+# Run tests with verbose output
+go test -v ./...
+
+# Run benchmarks
+go test -bench=. ./...
+```
+
+Integration tests start a real HTTP server and make actual HTTP requests to verify end-to-end functionality. They are fast enough for CI (complete in ~2 seconds) and can be skipped during development with the `-short` flag.
+
 ## Documentation
 
 For more information about the project:
