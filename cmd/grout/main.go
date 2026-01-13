@@ -32,6 +32,9 @@ func main() {
 	mux := http.NewServeMux()
 	svc.RegisterRoutes(mux, rateLimiter)
 
+	// Wrap with compression middleware
+	handler := middleware.CompressionMiddleware(mux)
+
 	fmt.Printf("Grout running on %s (rate limit: %d req/min, burst: %d)\n", cfg.Addr, cfg.RateLimitRPM, cfg.RateLimitBurst)
-	log.Fatal(http.ListenAndServe(cfg.Addr, mux))
+	log.Fatal(http.ListenAndServe(cfg.Addr, handler))
 }
